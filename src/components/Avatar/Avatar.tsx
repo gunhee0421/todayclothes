@@ -12,7 +12,7 @@ import {
   cloudImage,
 } from './AvatarImg'
 import Image from 'next/image'
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { clearTimeout } from 'timers'
 
 export const HomeAvatar = () => {
@@ -69,12 +69,16 @@ export const LoadingAvatar = () => {
     ...coldImage,
     ...so_coldImage,
   ]
-  const randomImage = imageArray[Math.floor(Math.random() * imageArray.length)]
+  const RandomImage = useMemo(() => {
+    const image = imageArray[Math.floor(Math.random() * imageArray.length)]
+    return image
+  }, [])
+
   return (
     <div className="flex flex-col items-center justify-end pt-[10vh]">
-      {randomImage && (
+      {RandomImage && (
         <Image
-          src={randomImage}
+          src={RandomImage}
           alt="Avatar"
           width={200}
           height={450}
@@ -96,6 +100,11 @@ export const LoadingAvatar = () => {
           </>
         )}
       </p>
+      <div className="mt-12 flex space-x-2">
+        <div className="animate-dot h-4 w-4 rounded-full bg-gray-500 opacity-0 delay-100" />
+        <div className="animate-dot h-4 w-4 rounded-full bg-gray-500 opacity-0 delay-200" />
+        <div className="animate-dot h-4 w-4 rounded-full bg-gray-500 opacity-0 delay-300" />
+      </div>
     </div>
   )
 }

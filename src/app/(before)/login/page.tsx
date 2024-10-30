@@ -26,46 +26,53 @@ const Login = () => {
         }
 
   return (
-    <div className="flex h-screen w-[600px] flex-col items-start justify-center gap-[314px] bg-gray-100 px-9 py-36">
-      <div className="flex w-[528px] animate-fadein flex-col gap-4 py-8">
-        <p className="font-notosanko text-[28px] font-bold">
-          {textContent.welcome.split('\n').map((text, index) => (
-            <span key={index}>
-              {text}
-              <br />
-            </span>
-          ))}
-        </p>
-        <p className="font-notosanko text-[18px] font-medium">
-          {textContent.signupPrompt}
-        </p>
-      </div>
-      <div className="flex w-[528px] flex-col gap-6 rounded-sm px-6 py-12">
-        <Link
-          href={`${
-            process.env.NEXT_PUBLIC_SOCIAL_LOGIN_GOOGLE
-          }?redirect_uri=${process.env.VERCEL ? 'https://todayclothes.vercel.app' : 'http://localhost:3000/auth/token'}`}
-        >
-          <button className="flex w-full items-center justify-between bg-white px-4 py-[10px] hover:bg-slate-50">
-            <img src="/icon/google.svg" alt="google" width="24" height="24" />
-            <p className="flex-1 font-notosanko text-[12px] font-medium">
-              {textContent.google}
-            </p>
-          </button>
-        </Link>
+    <div className="flex min-h-screen w-full max-w-[37.5rem] flex-col bg-gray-100 px-[2.25rem] py-[6rem]">
+      <div className="flex w-full flex-col gap-[13rem] sm:gap-[15rem]">
+        <div className="flex w-full animate-fadein flex-col gap-[1rem] py-[2rem]">
+          <p className="font-notosanko text-[1.3rem] font-bold sm:text-[1.75rem]">
+            {textContent.welcome.split('\n').map((text, index) => (
+              <span key={index}>
+                {text}
+                <br />
+              </span>
+            ))}
+          </p>
+          <p className="font-notosanko text-[0.9rem] font-medium sm:text-lg">
+            {textContent.signupPrompt}
+          </p>
+        </div>
 
-        <Link
-          href={`${
-            process.env.NEXT_PUBLIC_SOCIAL_LOGIN_KAKAO
-          }?redirect_uri=${process.env.VERCEL ? 'https://todayclothes.vercel.app' : 'http://localhost:3000/auth/token'}`}
-        >
-          <button className="flex w-full items-center bg-yellow-300 px-4 py-[10px] hover:bg-yellow-200">
-            <img src="/icon/kakao.svg" alt="kakao" width="24" height="24" />
-            <p className="flex-1 font-notosanko text-[12px] font-medium">
-              {textContent.kakao}
-            </p>
-          </button>
-        </Link>
+        <div className="flex w-full flex-col gap-[1.5rem] px-[1.5rem] py-[3rem]">
+          <Link
+            href={`${process.env.NEXT_PUBLIC_SOCIAL_LOGIN_GOOGLE}?redirect_uri=${
+              process.env.VERCEL
+                ? 'https://todayclothes.vercel.app'
+                : 'http://localhost:3000/auth/token'
+            }`}
+          >
+            <button className="flex w-full items-center justify-between rounded-[0.25rem] bg-white px-[1rem] py-[0.625rem] hover:bg-slate-50">
+              <img src="/icon/google.svg" alt="google" width="24" height="24" />
+              <p className="flex-1 text-center font-notosanko text-[0.75rem] font-medium">
+                {textContent.google}
+              </p>
+            </button>
+          </Link>
+
+          <Link
+            href={`${process.env.NEXT_PUBLIC_SOCIAL_LOGIN_KAKAO}?redirect_uri=${
+              process.env.VERCEL
+                ? 'https://todayclothes.vercel.app'
+                : 'http://localhost:3000/auth/token'
+            }`}
+          >
+            <button className="flex w-full items-center rounded-[0.25rem] bg-yellow-300 px-[1rem] py-[0.625rem] hover:bg-yellow-200">
+              <img src="/icon/kakao.svg" alt="kakao" width="24" height="24" />
+              <p className="flex-1 text-center font-notosanko text-[0.75rem] font-medium">
+                {textContent.kakao}
+              </p>
+            </button>
+          </Link>
+        </div>
       </div>
     </div>
   )

@@ -16,22 +16,22 @@ const Header = () => {
 
   return (
     <div className="flex items-center justify-between">
-      <div
-        className="cursor-pointer font-jalnan text-[24px]"
+      <p
+        className="cursor-pointer font-jalnan text-[1.15rem] sm:text-[1.5rem]"
         onClick={() => router.push('/home')}
       >
         {language === 'ko' ? '오늘의 옷장' : "Today's Closet"}
-      </div>
+      </p>
 
       <div className="flex gap-4">
         <button
-          className="font-toss text-[32px]"
+          className="font-toss text-[1.6rem] sm:text-[2rem]"
           onClick={() => handleLanguageChange('en')}
         >
           🇺🇸
         </button>
         <button
-          className="font-toss text-[32px]"
+          className="font-toss text-[1.6rem] sm:text-[2rem]"
           onClick={() => handleLanguageChange('ko')}
         >
           🇰🇷

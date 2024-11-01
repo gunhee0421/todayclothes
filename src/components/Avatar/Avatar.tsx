@@ -43,15 +43,9 @@ export const HomeAvatar = () => {
   const randomImage = imageArray[Math.floor(Math.random() * imageArray.length)]
 
   return (
-    <div className="flex flex-shrink items-center justify-center px-[8em] py-[5em]">
+    <div className="flex flex-shrink items-center justify-center sm:px-[2rem] sm:py-[1.25rem] md:px-[3rem] md:py-[1.75rem] lg:px-[4rem] lg:py-[2.5rem] xl:px-[6rem] xl:py-[3rem] 2xl:px-[8rem] 2xl:py-[5rem]">
       {randomImage ? (
-        <Image
-          src={randomImage}
-          alt="Avatar"
-          width={200}
-          height={450}
-          style={{ height: '55vh' }}
-        />
+        <Image src={randomImage} alt="Avatar" width={200} height={450} />
       ) : (
         <p>No Image</p>
       )}
@@ -101,9 +95,9 @@ export const LoadingAvatar = () => {
         )}
       </p>
       <div className="mt-12 flex space-x-2">
-        <div className="animate-dot h-4 w-4 rounded-full bg-gray-500 opacity-0 delay-100" />
-        <div className="animate-dot h-4 w-4 rounded-full bg-gray-500 opacity-0 delay-200" />
-        <div className="animate-dot h-4 w-4 rounded-full bg-gray-500 opacity-0 delay-300" />
+        <div className="h-4 w-4 animate-dot rounded-full bg-gray-500 opacity-0 delay-100" />
+        <div className="h-4 w-4 animate-dot rounded-full bg-gray-500 opacity-0 delay-200" />
+        <div className="h-4 w-4 animate-dot rounded-full bg-gray-500 opacity-0 delay-300" />
       </div>
     </div>
   )

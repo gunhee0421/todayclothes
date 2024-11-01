@@ -27,9 +27,9 @@ const Login = () => {
 
   return (
     <div className="flex min-h-screen w-full max-w-[37.5rem] flex-col items-center justify-center bg-gray-100 px-[2.25rem]">
-      <div className="flex w-full flex-col gap-[13rem] sm:gap-[22rem]">
+      <div className="flex w-full flex-col gap-[13.5rem] sm:gap-[22rem]">
         <div className="flex w-full animate-fadein flex-col gap-[1rem] py-[2rem]">
-          <p className="font-notosanko text-[1.3rem] font-bold sm:text-[1.75rem]">
+          <p className="font-notosanko text-[1.25rem] font-bold sm:text-[1.75rem]">
             {textContent.welcome.split('\n').map((text, index) => (
               <span key={index}>
                 {text}

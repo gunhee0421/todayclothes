@@ -93,7 +93,7 @@ const HomePage = () => {
 
   return (
     <div
-      className={`flex h-screen flex-col p-9 bg-${!loading ? background : 'white'}`}
+      className={`flex min-h-screen flex-col p-9 bg-${!loading ? background : 'white'}`}
     >
       {!loading && background ? (
         <div className="flex h-full flex-col justify-between">

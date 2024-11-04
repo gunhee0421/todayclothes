@@ -3,13 +3,18 @@ export enum ActivityType {
   Outdoor = 'OUTDOORS',
 }
 
+export enum Gender {
+  Female = 'FEMALE',
+  Male = 'MALE',
+}
+
 export enum ActivityStyle {
-  BusinessCasual = 'BUSINESS_CASUAL',
-  Minimal = 'MINIMAL',
-  Street = 'STREET',
   Casual = 'CASUAL',
-  Sports = 'SPORTS',
-  Amekaji = 'AMEKAJI',
+  Business = 'BUSINESS',
+  Street = 'STREET',
+  Formal = 'FORMAL',
+  Sporty = 'SPORTY',
+  Outdoor = 'OUTDOOR',
 }
 
 export enum Feedback {
@@ -57,7 +62,7 @@ export interface ActivityWeatherResponse {
   code: number
   message: string
   result: {
-    location: string,
+    location: string
     imgPath: string
     comment: string
     type: ActivityType

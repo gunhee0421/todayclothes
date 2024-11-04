@@ -57,12 +57,12 @@ const Plan: React.FC = () => {
   )
 
   const activityStyles = [
-    ActivityStyle.BusinessCasual,
-    ActivityStyle.Minimal,
     ActivityStyle.Casual,
+    ActivityStyle.Sporty,
+    ActivityStyle.Business,
+    ActivityStyle.Formal,
     ActivityStyle.Street,
-    ActivityStyle.Sports,
-    ActivityStyle.Amekaji,
+    ActivityStyle.Outdoor,
   ]
 
   const watchedValues = watch([
@@ -140,6 +140,46 @@ const Plan: React.FC = () => {
         </h2>
 
         <form onSubmit={handleSubmit(handleLog)}>
+          {/* Activity Location */}
+          <div>
+            <label className="font-notosanko text-[12px] font-medium leading-normal text-zinc-400">
+              {language === 'ko' ? '활동 장소' : 'Activity Location'}
+            </label>
+            <div className="max-w-full pb-[40px] pt-[8px]">
+              <Controller
+                name="selectedPlace"
+                control={control}
+                render={({ field }) => (
+                  <GooglePlacesAutocomplete
+                    selectProps={{
+                      value: field.value,
+                      onChange: handlePlaceChange,
+                      placeholder:
+                        language === 'ko'
+                          ? '활동 장소를 선택해주세요.'
+                          : 'Enter activity location.',
+                      styles: {
+                        control: (provided) => ({
+                          ...provided,
+                          height: '3rem',
+                          backgroundColor: 'rgb(241 241 244)',
+                          border: '0px solid',
+                          borderRadius: '8px',
+                          color: '#3C4350',
+                        }),
+                        input: (provided) => ({
+                          ...provided,
+                          color: '#3C4350',
+                        }),
+                      },
+                    }}
+                    apiKey={process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY}
+                  />
+                )}
+              />
+            </div>
+          </div>
+
           {/* Activity Time */}
           <label className="font-notosanko text-[12px] font-medium leading-normal text-zinc-400">
             {language === 'ko' ? '활동 시간' : 'Activity Time'}
@@ -181,46 +221,6 @@ const Plan: React.FC = () => {
                 </LocalizationProvider>
               )}
             />
-          </div>
-
-          {/* Activity Location */}
-          <div>
-            <label className="font-notosanko text-[12px] font-medium leading-normal text-zinc-400">
-              {language === 'ko' ? '활동 장소' : 'Activity Location'}
-            </label>
-            <div className="max-w-full pb-[40px] pt-[8px]">
-              <Controller
-                name="selectedPlace"
-                control={control}
-                render={({ field }) => (
-                  <GooglePlacesAutocomplete
-                    selectProps={{
-                      value: field.value,
-                      onChange: handlePlaceChange,
-                      placeholder:
-                        language === 'ko'
-                          ? '활동 장소를 선택해주세요.'
-                          : 'Enter activity location.',
-                      styles: {
-                        control: (provided) => ({
-                          ...provided,
-                          height: '3rem',
-                          backgroundColor: 'rgb(241 241 244)',
-                          border: '0px solid',
-                          borderRadius: '8px',
-                          color: '#3C4350',
-                        }),
-                        input: (provided) => ({
-                          ...provided,
-                          color: '#3C4350',
-                        }),
-                      },
-                    }}
-                    apiKey={process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY}
-                  />
-                )}
-              />
-            </div>
           </div>
 
           {/* Activity Type */}

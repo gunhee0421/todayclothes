@@ -22,27 +22,33 @@ const ActivityStyleTranslation: Record<
   Record<ActivityStyle, string>
 > = {
   en: {
-    [ActivityStyle.BusinessCasual]: 'Business Casual',
-    [ActivityStyle.Minimal]: 'Minimal',
+    [ActivityStyle.Business]: 'Business',
+    [ActivityStyle.Formal]: 'Minimal',
     [ActivityStyle.Street]: 'Street',
     [ActivityStyle.Casual]: 'Casual',
-    [ActivityStyle.Sports]: 'Sports',
-    [ActivityStyle.Amekaji]: 'Amekaji',
+    [ActivityStyle.Sporty]: 'Sporty',
+    [ActivityStyle.Outdoor]: 'Outdoor',
   },
   ko: {
-    [ActivityStyle.BusinessCasual]: '비즈니스 캐주얼',
-    [ActivityStyle.Minimal]: '미니멀',
+    [ActivityStyle.Business]: '비지니스',
+    [ActivityStyle.Formal]: '격식있는',
     [ActivityStyle.Street]: '스트릿',
     [ActivityStyle.Casual]: '캐주얼',
-    [ActivityStyle.Sports]: '스포츠',
-    [ActivityStyle.Amekaji]: '아메카지',
+    [ActivityStyle.Sporty]: '스포츠',
+    [ActivityStyle.Outdoor]: '아웃도어',
   },
 }
 
-export const translateActivityType = (type: ActivityType, language: Language) => {
+export const translateActivityType = (
+  type: ActivityType,
+  language: Language,
+) => {
   return ActivityTypeTranslation[language][type] || type
 }
 
-export const translateActivityStyle = (style: ActivityStyle, language: Language) => {
+export const translateActivityStyle = (
+  style: ActivityStyle,
+  language: Language,
+) => {
   return ActivityStyleTranslation[language][style] || style
 }

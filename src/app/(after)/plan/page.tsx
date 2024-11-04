@@ -36,6 +36,8 @@ interface FormValues {
     lat: number | null
     lon: number | null
   }
+  gender: 'Female' | 'Male' | null
+  timeOfDay: 'Morning' | 'Afternoon' | 'Evening' | 'Night' | null
 }
 
 const Plan: React.FC = () => {
@@ -219,6 +221,80 @@ const Plan: React.FC = () => {
                     }}
                   />
                 </LocalizationProvider>
+              )}
+            />
+          </div>
+
+          {/* Time of Day */}
+          <div>
+            <label className="font-notosanko text-[12px] font-medium leading-normal text-zinc-400">
+              {language === 'ko' ? '활동 시간대' : 'Time of Day'}
+            </label>
+            <Controller
+              name="timeOfDay"
+              control={control}
+              render={({ field }) => (
+                <div className="grid grid-cols-2 gap-[8px] pb-[40px] pt-[8px]">
+                  {['Morning', 'Afternoon', 'Evening', 'Night'].map((time) => (
+                    <button
+                      key={time}
+                      type="button"
+                      onClick={() => field.onChange(time)}
+                      className={`rounded-[16px] px-2 py-4 font-notosanko font-medium ${
+                        field.value === time
+                          ? 'bg-red-100 text-red-600'
+                          : 'bg-gray-100 text-gray-600'
+                      }`}
+                    >
+                      {language === 'ko'
+                        ? time === 'Morning'
+                          ? '아침'
+                          : time === 'Afternoon'
+                            ? '낮'
+                            : time === 'Evening'
+                              ? '저녁'
+                              : '밤'
+                        : time}
+                    </button>
+                  ))}
+                </div>
+              )}
+            />
+          </div>
+
+          {/* Gender */}
+          <div>
+            <label className="font-notosanko text-[12px] font-medium leading-normal text-zinc-400">
+              {language === 'ko' ? '성별' : 'Gender'}
+            </label>
+            <Controller
+              name="gender"
+              control={control}
+              render={({ field }) => (
+                <div className="flex gap-[16px] pb-[40px] pt-[8px]">
+                  <button
+                    type="button"
+                    onClick={() => field.onChange('Female')}
+                    className={`flex-1 rounded-[16px] px-2 py-4 font-notosanko font-medium ${
+                      field.value === 'Female'
+                        ? 'bg-red-100 text-red-600'
+                        : 'bg-gray-100 text-gray-600'
+                    }`}
+                  >
+                    {language === 'ko' ? '여성' : 'Female'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => field.onChange('Male')}
+                    className={`flex-1 rounded-[16px] px-2 py-4 font-notosanko font-medium ${
+                      field.value === 'Male'
+                        ? 'bg-red-100 text-red-600'
+                        : 'bg-gray-100 text-gray-600'
+                    }`}
+                  >
+                    {language === 'ko' ? '남성' : 'Male'}
+                  </button>
+                </div>
               )}
             />
           </div>

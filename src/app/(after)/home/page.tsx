@@ -10,7 +10,7 @@ import NavigationBar from '@/components/NavigationBar/NavigationBar'
 import PlansModal from '@/components/Modal/PlansModal'
 import { useModal } from '@/hooks/useModal/useModal'
 import { RootState } from '@/redux/store'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 const HomePage = () => {
@@ -36,10 +36,12 @@ const HomePage = () => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           setGeolocation({
-            lat: position.coords.latitude,
-            lon: position.coords.longitude,
-            // lat: 37.27583066680875,
-            // lon: 127.13301517019643,
+            // lat: position.coords.latitude,
+            // lon: position.coords.longitude,
+            // 40.690638694267854, -74.04410854678733 뉴욕
+            // 33.2627221, 131.3530363 일본
+            lat: 33.2627221,
+            lon: 131.3530363,
           })
         },
         (error) => {
@@ -71,7 +73,9 @@ const HomePage = () => {
 
           console.log(data)
 
-          setCity(data.results[4].address_components[1].long_name)
+          const cityName = data.plus_code.compound_code.split(' ')
+
+          setCity(cityName[cityName.length - 1])
         }
       } catch (error) {
         console.log(error)
@@ -92,11 +96,11 @@ const HomePage = () => {
   }
 
   return (
-    <div
-      className={`flex min-h-screen flex-col p-9 bg-${!loading ? background : 'white'}`}
-    >
+    <>
       {!loading && background ? (
-        <div className="flex h-full flex-col justify-between">
+        <div
+          className={`flex min-h-screen flex-col justify-between p-9 bg-${!loading ? background : 'white'}`}
+        >
           <div className="flex flex-col gap-9">
             <Header />
             <TodayWeatherInfo
@@ -115,7 +119,7 @@ const HomePage = () => {
           <LoadingAvatar />
         </div>
       )}
-    </div>
+    </>
   )
 }
 

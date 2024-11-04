@@ -40,10 +40,10 @@ export const TodayWeatherInfo: React.FC<{
 
   // 날씨 정보 호출 후, 언어 번역
   useEffect(() => {
-    if (location && language == 'ko') {
-      translate(city, language)
-    }
-  }, [todayWeather?.city.name, language])
+    translate(city, 'en')
+    console.log(translatedText, city)
+  }, [])
+
   // 하루동안의 1시간 단위의 정보를 바탕으로 최고, 최저, 강수 확률 계산
   const SliceData =
     todayWeather?.list.slice(0, 13).map((item) => ({
@@ -63,7 +63,7 @@ export const TodayWeatherInfo: React.FC<{
         <div className="flex w-full flex-row justify-between">
           <div className="flex flex-col gap-[0.5rem]">
             <h1 className="font-notosanko text-[1.5rem] font-medium sm:text-weatherTitle">
-              {language == 'ko' && translatedText
+              {language !== 'ko' && translatedText
                 ? translatedText[0]?.translations[0]?.text
                 : city}
             </h1>

@@ -241,11 +241,17 @@ const config = {
           '0%': { transform: 'translateY(0)', opacity: '1' },
           '100%': { transform: 'translateY(-3px)', opacity: '0.5' },
         },
+        'dot-flashing': {
+          '0%, 20%': { opacity: '0' }, // 처음과 20%일 때 투명
+          '50%': { opacity: '1' }, // 50%에서 최대 투명도
+          '80%, 100%': { opacity: '0' }, // 마지막으로 다시 투명
+        },
       },
       animation: {
         fadein: 'fadein 1s ease-out',
         modalFadein: 'modalFadein 0.2s ease-out',
         modalFadeout: 'modalFadeout 0.2s ease-in',
+        dot: 'dot-flashing 1.4s infinite', // 애니메이션 이름
       },
     },
   },

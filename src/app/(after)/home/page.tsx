@@ -19,6 +19,7 @@ const HomePage = () => {
   const [loading, setLoading] = useState<boolean>(true)
   const [navigatorError, setNavigatorError] = useState<boolean>(false)
   const background = useSelector((state: RootState) => state.currentTemp)
+  const [city, setCity] = useState<string | null>(null)
   const dispatch = useDispatch()
 
   const { data: todayWeather, isFetching } = useTodayWeatherQuery(
@@ -37,6 +38,8 @@ const HomePage = () => {
           setGeolocation({
             lat: position.coords.latitude,
             lon: position.coords.longitude,
+            // lat: 37.27583066680875,
+            // lon: 127.13301517019643,
           })
         },
         (error) => {
@@ -56,6 +59,27 @@ const HomePage = () => {
     }
   }, [todayWeather])
 
+  useEffect(() => {
+    const Location = async () => {
+      try {
+        console.log(geolocation?.lat, geolocation?.lon)
+        if (geolocation) {
+          const response = await fetch(
+            `https://maps.googleapis.com/maps/api/geocode/json?latlng=${geolocation.lat},${geolocation.lon}&key=${process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY}`,
+          )
+          const data = await response.json()
+
+          console.log(data)
+
+          setCity(data.results[4].address_components[1].long_name)
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    Location()
+  }, [geolocation])
+
   if (navigatorError) {
     return (
       <div className={`flex min-h-screen flex-col gap-9 bg-rose-100 p-9`}>
@@ -72,9 +96,14 @@ const HomePage = () => {
       className={`flex min-h-screen flex-col p-9 bg-${!loading ? background : 'white'}`}
     >
       {!loading && background ? (
-        <div className="flex flex-col gap-9">
-          <Header />
-          <TodayWeatherInfo todayWeather={todayWeather as WeatherResponse} />
+        <div className="flex h-full flex-col justify-between">
+          <div className="flex flex-col gap-9">
+            <Header />
+            <TodayWeatherInfo
+              todayWeather={todayWeather as WeatherResponse}
+              city={city as string}
+            />
+          </div>
           <HomeAvatar />
           <NavigationBar color={background} openModal={openModal} />
           {isVisible && (

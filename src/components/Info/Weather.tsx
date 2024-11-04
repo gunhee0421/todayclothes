@@ -31,16 +31,17 @@ export const WeatherSave = (data: WeatherResponse, dispatch: any) => {
   }
 }
 
-export const TodayWeatherInfo: React.FC<{ todayWeather: WeatherResponse }> = ({
-  todayWeather,
-}) => {
+export const TodayWeatherInfo: React.FC<{
+  todayWeather: WeatherResponse
+  city: string
+}> = ({ todayWeather, city }) => {
   const language = useSelector((state: RootState) => state.language)
   const { translatedText, translate } = useTranslate()
 
   // 날씨 정보 호출 후, 언어 번역
   useEffect(() => {
-    if (todayWeather?.city.name && language == 'ko') {
-      translate(todayWeather?.city.name, language)
+    if (location && language == 'ko') {
+      translate(city, language)
     }
   }, [todayWeather?.city.name, language])
   // 하루동안의 1시간 단위의 정보를 바탕으로 최고, 최저, 강수 확률 계산
@@ -64,7 +65,7 @@ export const TodayWeatherInfo: React.FC<{ todayWeather: WeatherResponse }> = ({
             <h1 className="font-notosanko text-weatherTitle">
               {language == 'ko' && translatedText
                 ? translatedText[0]?.translations[0]?.text
-                : todayWeather?.city.name}
+                : city}
             </h1>
             <p className="font-notosanko text-weatherSub text-weatherSubColor">
               {formatDate(language)}

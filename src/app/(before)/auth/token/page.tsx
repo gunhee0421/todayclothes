@@ -2,6 +2,7 @@
 
 import { setAccessToken, setRefreshToken } from '@/redux/slice/Login'
 import { RootState } from '@/redux/store'
+import Cookies from 'js-cookie'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -25,14 +26,14 @@ const AuthToken = ({
 
   useEffect(() => {
     if (urlAccessToken && urlRefreshToken) {
-      // Cookies.set('access', accessToken || '', {
-      //   secure: true,
-      //   expires: new Date('2038-01-19T03:14:07.000Z'),
-      // })
-      // Cookies.set('refresh', refreshToken || '', {
-      //   secure: true,
-      //   expires: new Date('2038-01-19T03:14:07.000Z'),
-      // })
+      Cookies.set('access', urlAccessToken || '', {
+        secure: true,
+        expires: new Date('2038-01-19T03:14:07.000Z'),
+      })
+      Cookies.set('refresh', urlRefreshToken || '', {
+        secure: true,
+        expires: new Date('2038-01-19T03:14:07.000Z'),
+      })
 
       dispatch(setAccessToken(urlAccessToken))
       dispatch(setRefreshToken(urlRefreshToken))

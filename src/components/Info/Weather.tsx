@@ -10,11 +10,12 @@ import { setTemp } from '@/redux/slice/CurrentTempSlice'
 import { activityHistoryInfo } from '@/api/services/recommend/model'
 import { translateActivityStyle, translateActivityType } from './translation'
 import { getWeatherDescription } from './condition'
+import { weatherSegments } from '../Date/getRecommendData'
 
 type Language = 'en' | 'ko'
 
-export const WeatherSave = (data: WeatherResponse, dispatch: any) => {
-  const temp = data.list[0].main.feels_like
+export const WeatherSave = (data: weatherSegments, dispatch: any) => {
+  const temp = data.temp
 
   if (temp >= 29) {
     dispatch(setTemp('so_hot'))
@@ -32,7 +33,7 @@ export const WeatherSave = (data: WeatherResponse, dispatch: any) => {
 }
 
 export const TodayWeatherInfo: React.FC<{
-  todayWeather: WeatherResponse
+  todayWeather: weatherSegments
   city: string
 }> = ({ todayWeather, city }) => {
   const language = useSelector((state: RootState) => state.language)
@@ -41,21 +42,7 @@ export const TodayWeatherInfo: React.FC<{
   // 날씨 정보 호출 후, 언어 번역
   useEffect(() => {
     translate(city, 'en')
-    console.log(translatedText, city)
   }, [])
-
-  // 하루동안의 1시간 단위의 정보를 바탕으로 최고, 최저, 강수 확률 계산
-  const SliceData =
-    todayWeather?.list.slice(0, 13).map((item) => ({
-      tempMin: item.main.temp_min,
-      tempMax: item.main.temp_max,
-      rain: item.pop,
-    })) || []
-
-  const tempMin = Math.min(...SliceData.map((t) => t.tempMin))
-  const tempMax = Math.max(...SliceData.map((t) => t.tempMax))
-  const rainPercent =
-    SliceData.reduce((acc, cur) => acc + cur.rain, 0) / SliceData.length
 
   return (
     <div className="flex h-[97px] w-full max-w-lg content-center items-start self-stretch">
@@ -73,21 +60,21 @@ export const TodayWeatherInfo: React.FC<{
           </div>
           <div className="flex flex-col items-end justify-center gap-[0.5rem]">
             <h1 className="text-right font-notosanko text-[1.05rem] font-bold sm:text-[1.5rem]">
-              {language == 'en' ? 'Low: ' : '최저: '} {Math.round(tempMin)}°C /{' '}
+              {language == 'en' ? 'Low: ' : '최저: '} {todayWeather.maxTemp}°C /{' '}
               {language == 'en' ? 'High:' : '최고: '}
-              {Math.round(tempMax)}°C
+              {todayWeather.minTemp}°C
             </h1>
             <p className="font-notosanko text-[0.8rem] font-semibold text-weatherSpanColor sm:text-weatherSpan">
               {language == 'en' ? 'Feels Like:' : '체감온도:'}{' '}
-              {Math.round(todayWeather?.list[0].main.feels_like)}°C
+              {todayWeather.feels_like}°C
             </p>
             <p className="text-right font-notosanko text-[0.8rem] text-gray-700 sm:text-[1rem]">
               <span className="font-toss">🌧️</span>{' '}
-              {Math.round(rainPercent * 100)}%{' '}
+              {Math.round(todayWeather.rain * 100)}%{' '}
               <span className="font-toss">💧</span>{' '}
-              {Math.round(todayWeather?.list[0].main.humidity)}%{' '}
+              {Math.round(todayWeather.hydrate)}%{' '}
               <span className="font-toss">💨</span>{' '}
-              {Math.round(todayWeather?.list[0].wind.speed * 3.6)}
+              {Math.round(todayWeather.wind * 3.6)}
               km/h
             </p>
           </div>

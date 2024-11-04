@@ -48,42 +48,42 @@ const Recommend = () => {
     },
   )
   // todayWeather 데이터로 시간에 따른 날씨 필터링
-  useEffect(() => {
-    if (todayWeather && weatherData?.location) {
-      const filteredWeather = getRecommendData(todayWeather, {
-        startTime: weatherData.startTime || '',
-        endTime: weatherData.endTime || '',
-      })
+  // useEffect(() => {
+  //   if (todayWeather && weatherData?.location) {
+  //     const filteredWeather = getRecommendData(todayWeather, {
+  //       startTime: weatherData.startTime || '',
+  //       endTime: weatherData.endTime || '',
+  //     })
 
-      setQuery({
-        location: todayWeather.city.name,
-        startTime: weatherData.startTime || '',
-        endTime: weatherData.endTime || '',
-        type: weatherData.type || ActivityType.Indoor,
-        style: weatherData.style || ActivityStyle.Amekaji,
-        weather: filteredWeather.tempCode,
-        wind: filteredWeather.wind,
-        rain: filteredWeather.rain,
-        humidity: filteredWeather.hydrate,
-        feelsLike: filteredWeather.feels_like,
-        temp: filteredWeather.temp,
-      })
+  //     setQuery({
+  //       location: todayWeather.city.name,
+  //       startTime: weatherData.startTime || '',
+  //       endTime: weatherData.endTime || '',
+  //       type: weatherData.type || ActivityType.Indoor,
+  //       style: weatherData.style || ActivityStyle.Amekaji,
+  //       weather: filteredWeather.tempCode,
+  //       wind: filteredWeather.wind,
+  //       rain: filteredWeather.rain,
+  //       humidity: filteredWeather.hydrate,
+  //       feelsLike: filteredWeather.feels_like,
+  //       temp: filteredWeather.temp,
+  //     })
 
-      mutateActivityInfo({
-        location: todayWeather.city.name,
-        startTime: weatherData.startTime || '',
-        endTime: weatherData.endTime || '',
-        type: weatherData.type || ActivityType.Indoor,
-        style: weatherData.style || ActivityStyle.Amekaji,
-        weather: filteredWeather.tempCode,
-        wind: filteredWeather.wind,
-        rain: filteredWeather.rain,
-        humidity: filteredWeather.hydrate,
-        feelsLike: filteredWeather.feels_like,
-        temp: filteredWeather.temp,
-      })
-    }
-  }, [weatherData?.location, todayWeather])
+  //     mutateActivityInfo({
+  //       location: todayWeather.city.name,
+  //       startTime: weatherData.startTime || '',
+  //       endTime: weatherData.endTime || '',
+  //       type: weatherData.type || ActivityType.Indoor,
+  //       style: weatherData.style || ActivityStyle.Amekaji,
+  //       weather: filteredWeather.tempCode,
+  //       wind: filteredWeather.wind,
+  //       rain: filteredWeather.rain,
+  //       humidity: filteredWeather.hydrate,
+  //       feelsLike: filteredWeather.feels_like,
+  //       temp: filteredWeather.temp,
+  //     })
+  //   }
+  // }, [weatherData?.location, todayWeather])
 
   // comment 번역
   useEffect(() => {
@@ -104,7 +104,7 @@ const Recommend = () => {
 
   return (
     <div className="flex min-h-screen min-w-[600px] flex-col gap-9 bg-white p-9">
-      {!loading ? (
+      {/* {!loading ? (
         <>
           <Header />
           <ActivityWeather
@@ -129,7 +129,7 @@ const Recommend = () => {
         </>
       ) : (
         <LoadingAvatar />
-      )}
+      )} */}
     </div>
   )
 }

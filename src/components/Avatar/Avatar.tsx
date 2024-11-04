@@ -1,8 +1,7 @@
 'use client'
 
 import { RootState } from '@/redux/store'
-import { useSelector } from 'react-redux'
-
+import { useDispatch, useSelector } from 'react-redux'
 import {
   freshImage,
   coldImage,
@@ -12,8 +11,12 @@ import {
   cloudImage,
 } from './AvatarImg'
 import Image from 'next/image'
-import React, { useEffect, useMemo, useState } from 'react'
-import { clearTimeout } from 'timers'
+import React, { SetStateAction, useEffect, useMemo, useState } from 'react'
+import { weatherSegments } from '../Date/getRecommendData'
+import Slider from 'react-slick'
+import 'slick-carousel/slick/slick.css'
+import 'slick-carousel/slick/slick-theme.css'
+import { WeatherSave } from '../Info/Weather'
 
 export const HomeAvatar = () => {
   const temp = useSelector((data: RootState) => data.currentTemp)
@@ -43,15 +46,48 @@ export const HomeAvatar = () => {
   const randomImage = imageArray[Math.floor(Math.random() * imageArray.length)]
 
   return (
-    <div className="flex h-full flex-shrink items-center justify-center sm:px-[2rem] sm:py-[1.25rem] md:px-[3rem] md:py-[1.75rem] lg:px-[4rem] lg:py-[2.5rem] xl:px-[6rem] xl:py-[3rem] 2xl:px-[8rem] 2xl:py-[5rem]">
+    <div className="flex flex-shrink items-center justify-center sm:px-[2rem] sm:py-[1.25rem] md:px-[3rem] md:py-[1.75rem] lg:px-[4rem] lg:py-[2.5rem] xl:px-[6rem] xl:py-[3rem] 2xl:px-[8rem] 2xl:py-[5rem]">
       {randomImage ? (
-        <Image src={randomImage} alt="Avatar" width={200} height={450} />
+        <Image
+          src={randomImage}
+          alt="캐릭터 아바타"
+          height={150}
+          width={50}
+          className="h-[50vh]"
+        />
       ) : (
         <p>No Image</p>
       )}
     </div>
   )
 }
+export const HomeAvatarCarousel: React.FC<{
+  data: weatherSegments[]
+  setCurrentTemp: React.Dispatch<SetStateAction<number>>
+}> = ({ data, setCurrentTemp }) => {
+  const dispatch = useDispatch()
+
+  const settings = {
+    dots: true,
+    infinite: true,
+    arrows: false,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    beforeChange: (current: number, next: number) => {
+      setCurrentTemp(next)
+      WeatherSave(data[next], dispatch)
+    },
+  }
+  return (
+    <Slider {...settings}>
+      {data.map((item) => (
+        <HomeAvatar />
+      ))}
+    </Slider>
+  )
+}
+
 export const LoadingAvatar = () => {
   const language = useSelector((state: RootState) => state.language)
 

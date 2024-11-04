@@ -7,6 +7,8 @@ import { LocalizationProvider, TimePicker } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { useForm, Controller } from 'react-hook-form'
 import dayjs, { Dayjs } from 'dayjs'
+import 'dayjs/locale/ko'
+import 'dayjs/locale/en'
 import GooglePlacesAutocomplete, {
   geocodeByPlaceId,
 } from 'react-google-places-autocomplete'
@@ -16,6 +18,9 @@ import { useRouter } from 'next/navigation'
 import { useWeatherContext } from '@/providers/WeatherProvider'
 import { ActivityStyle, ActivityType } from '@/api'
 import { translateActivityStyle } from '@/components/Info/translation'
+import { DatePicker } from '@mui/x-date-pickers'
+import { useState, useEffect } from 'react'
+import { geocodeByLatLng } from 'react-google-places-autocomplete'
 
 type Language = 'en' | 'ko'
 
@@ -30,7 +35,6 @@ interface FormValues {
   activityType: ActivityType.Indoor | ActivityType.Outdoor | null
   activityStyle: ActivityStyle | null
   startTime: Dayjs | null
-  endTime: Dayjs | null
   selectedPlace: Option | null
   placeCoordinates: {
     lat: number | null
@@ -44,14 +48,23 @@ const Plan: React.FC = () => {
   const language = useSelector((state: RootState) => state.language) as Language
   const router = useRouter()
   const weatherData = useWeatherContext()
+  const today = dayjs()
+  const selectableDates = [
+    today,
+    today.add(1, 'day'),
+    today.add(2, 'day'),
+    today.add(3, 'day'),
+  ]
+  const isDateSelectable = (date: Dayjs | null) => {
+    return selectableDates.some((d) => d.isSame(date, 'day'))
+  }
 
   const { control, handleSubmit, setValue, reset, watch } = useForm<FormValues>(
     {
       defaultValues: {
         activityType: null,
         activityStyle: null,
-        startTime: null,
-        endTime: null,
+        startTime: dayjs(),
         selectedPlace: null,
         placeCoordinates: { lat: null, lon: null },
       },
@@ -71,11 +84,50 @@ const Plan: React.FC = () => {
     'activityType',
     'activityStyle',
     'startTime',
-    'endTime',
     'selectedPlace',
   ])
 
   const isFormValid = watchedValues.every((value) => value !== null)
+
+  // 현재 위치 정보를 가져오는 함수
+  const getCurrentLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords
+
+          // 좌표를 사용하여 주소를 가져오기
+          const results = await geocodeByLatLng({
+            lat: latitude,
+            lng: longitude,
+          })
+
+          // 기본값 설정
+          setValue('placeCoordinates', {
+            lat: latitude,
+            lon: longitude,
+          })
+
+          if (results.length > 0) {
+            const address = results[0]
+            setValue('selectedPlace', {
+              label: address.formatted_address,
+              value: { place_id: address.place_id },
+            })
+          }
+        },
+        (error) => {
+          console.error('Error getting location:', error)
+        },
+      )
+    } else {
+      console.error('Geolocation is not supported by this browser.')
+    }
+  }
+
+  useEffect(() => {
+    getCurrentLocation()
+  }, [])
 
   const handlePlaceChange = async (newValue: Option | null) => {
     setValue('selectedPlace', newValue)
@@ -96,26 +148,8 @@ const Plan: React.FC = () => {
   }
 
   const handleLog = (data: FormValues) => {
-    const { activityType, activityStyle, startTime, endTime } = data
+    const { activityType, activityStyle, startTime } = data
     const now = dayjs()
-
-    if (!startTime || startTime.isBefore(now)) {
-      toast.error(
-        language === 'ko'
-          ? '시작 시간은 현재 시간보다 이후여야 합니다.'
-          : 'Start time must be later than the current time.',
-      )
-      return
-    }
-
-    if (!endTime || endTime.isBefore(now)) {
-      toast.error(
-        language === 'ko'
-          ? '종료 시간은 현재 시간보다 이후여야 합니다.'
-          : 'End time must be later than the current time.',
-      )
-      return
-    }
 
     console.log('Form Data:', data)
     weatherData.setWeatherData({
@@ -124,7 +158,6 @@ const Plan: React.FC = () => {
         lon: data.placeCoordinates.lon || 0,
       },
       startTime: data.startTime?.format('YYYY-MM-DDTHH:mm') || '',
-      endTime: data.endTime?.format('YYYY-MM-DDTHH:mm') || '',
       type: data.activityType,
       style: data.activityStyle,
     })
@@ -183,41 +216,28 @@ const Plan: React.FC = () => {
           </div>
 
           {/* Activity Time */}
-          <label className="font-notosanko text-[12px] font-medium leading-normal text-zinc-400">
+          <label className="w-full font-notosanko text-[12px] font-medium leading-normal text-zinc-400">
             {language === 'ko' ? '활동 시간' : 'Activity Time'}
           </label>
-          <div className="flex gap-[16px] pb-[40px] pt-[8px]">
+          <div className="flex pb-[40px] pt-[8px]">
             <Controller
               name="startTime"
               control={control}
               render={({ field }) => (
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <TimePicker
-                    label={language === 'ko' ? '시작 시간' : 'Start Time'}
+                <LocalizationProvider
+                  dateAdapter={AdapterDayjs}
+                  adapterLocale={language === 'ko' ? 'ko' : 'en'} // Set locale dynamically
+                >
+                  <DatePicker
                     {...field}
-                    value={field.value || null}
+                    value={field.value || dayjs()} // Default to today's date if not set
+                    disablePast
+                    shouldDisableDate={(date) => !isDateSelectable(date)}
                     sx={{
                       backgroundColor: 'rgb(241, 241, 244)',
                       border: 'none',
                       borderRadius: '8px',
-                    }}
-                  />
-                </LocalizationProvider>
-              )}
-            />
-            <Controller
-              name="endTime"
-              control={control}
-              render={({ field }) => (
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <TimePicker
-                    label={language === 'ko' ? '종료 시간' : 'End Time'}
-                    {...field}
-                    value={field.value || null}
-                    sx={{
-                      backgroundColor: 'rgb(241, 241, 244)',
-                      border: 'none',
-                      borderRadius: '8px',
+                      width: '100%',
                     }}
                   />
                 </LocalizationProvider>

@@ -58,30 +58,30 @@ export const TodayWeatherInfo: React.FC<{
     SliceData.reduce((acc, cur) => acc + cur.rain, 0) / SliceData.length
 
   return (
-    <div className="flex h-[97px] w-full content-center items-start self-stretch">
+    <div className="flex h-[97px] w-full max-w-lg content-center items-start self-stretch">
       {
         <div className="flex w-full flex-row justify-between">
-          <div className="flex flex-col gap-[8px]">
-            <h1 className="font-notosanko text-weatherTitle">
+          <div className="flex flex-col gap-[0.5rem]">
+            <h1 className="font-notosanko text-[1.5rem] font-medium sm:text-weatherTitle">
               {language == 'ko' && translatedText
                 ? translatedText[0]?.translations[0]?.text
                 : city}
             </h1>
-            <p className="font-notosanko text-weatherSub text-weatherSubColor">
+            <p className="font-notosanko text-[0.8rem] text-weatherSubColor sm:text-weatherSub">
               {formatDate(language)}
             </p>
           </div>
-          <div className="flex flex-col content-center items-end gap-[8px]">
-            <h1 className="font-notosanko text-weatherTem">
+          <div className="flex flex-col items-end justify-center gap-[0.5rem]">
+            <h1 className="text-right font-notosanko text-[1.05rem] font-bold sm:text-[1.5rem]">
               {language == 'en' ? 'Low: ' : '최저: '} {Math.round(tempMin)}°C /{' '}
               {language == 'en' ? 'High:' : '최고: '}
               {Math.round(tempMax)}°C
             </h1>
-            <p className="font-notosanko text-weatherSpan text-weatherSpanColor">
-              {language == 'en' ? 'Feels Like: ' : '체감온도'}{' '}
+            <p className="font-notosanko text-[0.8rem] font-semibold text-weatherSpanColor sm:text-weatherSpan">
+              {language == 'en' ? 'Feels Like:' : '체감온도:'}{' '}
               {Math.round(todayWeather?.list[0].main.feels_like)}°C
             </p>
-            <p className="font-notosanko text-weatherSpan text-weatherSubColor">
+            <p className="text-right font-notosanko text-[0.8rem] text-gray-700 sm:text-[1rem]">
               <span className="font-toss">🌧️</span>{' '}
               {Math.round(rainPercent * 100)}%{' '}
               <span className="font-toss">💧</span>{' '}

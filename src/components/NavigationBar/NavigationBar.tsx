@@ -1,4 +1,4 @@
-import { History, Plus, RotateCw, User } from 'lucide-react'
+import { History, Plus, RotateCw, Search, User } from 'lucide-react'
 import { variants } from './style'
 import { useRouter } from 'next/navigation'
 
@@ -12,16 +12,14 @@ interface NavigationBarProps {
 const NavigationBar: React.FC<NavigationBarProps> = ({ color, openModal }) => {
   const router = useRouter()
 
-  const handleHistoryClick = () => {
-    router.push('/history')
-  }
+  const handleSearchClick = () => {}
 
   const handlePlusClick = () => {
     openModal()
   }
 
   const handleUserClick = () => {
-    // User 클릭 시 동작
+    router.push('/history')
   }
 
   const handleRotateClick = () => {
@@ -30,29 +28,25 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ color, openModal }) => {
 
   return (
     <div
-      className={`flex h-fit w-full items-center justify-between rounded-[40px] px-14 py-3 shadow-base ${variants[color].bg}`}
+      className={`flex w-full max-w-lg items-center justify-between rounded-[2.5rem] px-[2.5rem] py-[0.7rem] shadow-base sm:px-[3.5rem] sm:py-[0.5rem] ${variants[color].bg}`}
     >
-      <History
-        size={'2.3em'}
-        className={`cursor-pointer ${variants[color].text}`}
-        onClick={handleHistoryClick}
+      <Search
+        className={`size-[1.6rem] cursor-pointer sm:size-[2.5rem] ${variants[color].text}`}
+        onClick={handleSearchClick}
       />
       {color === 'zinc' ? (
         <RotateCw
-          size={'2.3em'}
-          className="cursor-pointer text-zinc-600"
+          className="size-[1.6em] cursor-pointer text-zinc-600 sm:size-[2.3em]"
           onClick={handleRotateClick}
         />
       ) : (
         <Plus
-          size={'2.5em'}
-          className={`cursor-pointer ${variants[color].text}`}
+          className={`cursor-pointer ${variants[color].text} size-[2rem] sm:size-[3.5rem]`}
           onClick={handlePlusClick}
         />
       )}
       <User
-        size={'2.3em'}
-        className={`cursor-pointer ${variants[color].text} ${variants[color].fill}`}
+        className={`cursor-pointer ${variants[color].text} ${variants[color].fill} size-[1.6rem] sm:size-[2.5rem]`}
         onClick={handleUserClick}
       />
     </div>

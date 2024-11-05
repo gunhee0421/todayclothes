@@ -64,11 +64,13 @@ const Plan: React.FC = () => {
   const { control, handleSubmit, setValue, reset, watch } = useForm<FormValues>(
     {
       defaultValues: {
-        activityType: null,
-        activityStyle: null,
-        startTime: dayjs(),
+        activityType: ActivityType.Indoor, // 기본값: 실내
+        activityStyle: ActivityStyle.Casual, // 기본값: 캐주얼
+        startTime: dayjs(), // 기본값: 현재 시간
         selectedPlace: null,
         placeCoordinates: { lat: null, lon: null },
+        gender: Gender.Female, // 기본값: 여성
+        timeOfDay: TimeOfDay.Morning, // 기본값: 아침
       },
     },
   )
@@ -168,7 +170,7 @@ const Plan: React.FC = () => {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center">
+    <div className="flex min-h-screen items-center justify-center bg-white">
       <div className="w-[600px] rounded-[16px] p-[32px]">
         <h2 className="mb-[36px] text-center font-notosanko text-[20px] font-semibold leading-normal tracking-[-0.1px]">
           {language === 'ko'
@@ -257,7 +259,12 @@ const Plan: React.FC = () => {
               control={control}
               render={({ field }) => (
                 <div className="grid grid-cols-2 gap-[8px] pb-[40px] pt-[8px]">
-                  {['Morning', 'Afternoon', 'Evening', 'Night'].map((time) => (
+                  {[
+                    TimeOfDay.Morning,
+                    TimeOfDay.Afternoon,
+                    TimeOfDay.Evening,
+                    TimeOfDay.Night,
+                  ].map((time) => (
                     <button
                       key={time}
                       type="button"
@@ -269,11 +276,11 @@ const Plan: React.FC = () => {
                       }`}
                     >
                       {language === 'ko'
-                        ? time === 'Morning'
+                        ? time === TimeOfDay.Morning
                           ? '아침'
-                          : time === 'Afternoon'
+                          : time === TimeOfDay.Afternoon
                             ? '낮'
-                            : time === 'Evening'
+                            : time === TimeOfDay.Evening
                               ? '저녁'
                               : '밤'
                         : time}
@@ -284,7 +291,6 @@ const Plan: React.FC = () => {
             />
           </div>
 
-          {/* Gender */}
           <div>
             <label className="font-notosanko text-[12px] font-medium leading-normal text-zinc-400">
               {language === 'ko' ? '성별' : 'Gender'}
@@ -296,9 +302,9 @@ const Plan: React.FC = () => {
                 <div className="flex gap-[16px] pb-[40px] pt-[8px]">
                   <button
                     type="button"
-                    onClick={() => field.onChange('Female')}
+                    onClick={() => field.onChange(Gender.Female)}
                     className={`flex-1 rounded-[16px] px-2 py-4 font-notosanko font-medium ${
-                      field.value === 'Female'
+                      field.value === Gender.Female
                         ? 'bg-red-100 text-red-600'
                         : 'bg-gray-100 text-gray-600'
                     }`}
@@ -307,9 +313,9 @@ const Plan: React.FC = () => {
                   </button>
                   <button
                     type="button"
-                    onClick={() => field.onChange('Male')}
+                    onClick={() => field.onChange(Gender.Male)}
                     className={`flex-1 rounded-[16px] px-2 py-4 font-notosanko font-medium ${
-                      field.value === 'Male'
+                      field.value === Gender.Male
                         ? 'bg-red-100 text-red-600'
                         : 'bg-gray-100 text-gray-600'
                     }`}
@@ -321,7 +327,6 @@ const Plan: React.FC = () => {
             />
           </div>
 
-          {/* Activity Type */}
           <div>
             <label className="font-notosanko text-[12px] font-medium leading-normal text-zinc-400">
               {language === 'ko' ? '활동 종류' : 'Activity Type'}
@@ -358,7 +363,6 @@ const Plan: React.FC = () => {
             />
           </div>
 
-          {/* Activity Style */}
           <div>
             <label className="font-notosanko text-[12px] font-medium leading-normal text-zinc-400">
               {language === 'ko' ? '활동 분위기' : 'Activity Style'}
@@ -391,7 +395,7 @@ const Plan: React.FC = () => {
           <div className="flex gap-[12px]">
             <button
               type="button"
-              onClick={() => reset()}
+              onClick={() => router.push('/home')}
               className="flex-1 rounded-[8px] bg-red-100 py-2 font-notosanko text-red-600"
             >
               {language === 'ko' ? '취소' : 'Cancel'}

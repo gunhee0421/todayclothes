@@ -8,6 +8,13 @@ export enum Gender {
   Male = 'MALE',
 }
 
+export enum TimeOfDay {
+  Morning = 'Morning',
+  Afternoon = 'Afternoon',
+  Evening = 'Evening',
+  Night = 'Night',
+}
+
 export enum ActivityStyle {
   Casual = 'CASUAL',
   Business = 'BUSINESS',
@@ -21,6 +28,11 @@ export enum Feedback {
   Perfect = 'PERFECT',
   Too_Hot = 'HOT',
   Too_Cold = 'COLD',
+}
+
+export interface PlaceCoordinates {
+  lat: number | null
+  lon: number | null
 }
 
 export interface ActivityWeatherInfo {

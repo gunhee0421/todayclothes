@@ -21,6 +21,11 @@ import { translateActivityStyle } from '@/components/Info/translation'
 import { DatePicker } from '@mui/x-date-pickers'
 import { useState, useEffect } from 'react'
 import { geocodeByLatLng } from 'react-google-places-autocomplete'
+import {
+  Gender,
+  PlaceCoordinates,
+  TimeOfDay,
+} from '@/api/services/recommend/model'
 
 type Language = 'en' | 'ko'
 
@@ -36,12 +41,9 @@ interface FormValues {
   activityStyle: ActivityStyle | null
   startTime: Dayjs | null
   selectedPlace: Option | null
-  placeCoordinates: {
-    lat: number | null
-    lon: number | null
-  }
-  gender: 'Female' | 'Male' | null
-  timeOfDay: 'Morning' | 'Afternoon' | 'Evening' | 'Night' | null
+  placeCoordinates: PlaceCoordinates // 수정된 부분
+  gender: Gender | null
+  timeOfDay: TimeOfDay | null // 수정된 부분
 }
 
 const Plan: React.FC = () => {

@@ -30,7 +30,7 @@ const Review = ({ clothesId }: { clothesId: string }) => {
     photoCount: number
   }>({
     defaultValues: {
-      selectedFeel: null,
+      selectedFeel: Feedback.Perfect,
       selectedFile: null,
       photoCount: 0,
     },
@@ -154,6 +154,7 @@ const Review = ({ clothesId }: { clothesId: string }) => {
   const onSubmit = async (data: {
     selectedFeel: Feedback | null
     selectedFile: File | null
+    photoCount: number
   }) => {
     const { selectedFeel, selectedFile } = data
 
@@ -168,9 +169,10 @@ const Review = ({ clothesId }: { clothesId: string }) => {
       new Blob([JSON.stringify(reviewReq)], { type: 'application/json' }),
     )
 
-    if (selectedFile) {
-      formData.append('imageFile', selectedFile)
-    }
+    // `photos` 배열에서 최대 4개의 파일 추가
+    photos.slice(0, 4).forEach((file) => {
+      formData.append('imageFile', file)
+    })
 
     try {
       await activityReview.mutateAsync(formData, {
@@ -182,6 +184,7 @@ const Review = ({ clothesId }: { clothesId: string }) => {
         },
       })
     } catch (error) {
+      console.log('FormData:', formData)
       console.error('Error submitting review:', error)
     }
   }
@@ -211,126 +214,131 @@ const Review = ({ clothesId }: { clothesId: string }) => {
         <div className="flex min-h-screen w-full max-w-[37.5rem] items-center justify-between bg-white p-[2rem]">
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="flex h-full flex-1 flex-col justify-between gap-9 font-notosanko"
+            className="flex flex-1 flex-col justify-between gap-9 self-stretch font-notosanko"
           >
-            <p className="text-center text-[20px] font-semibold">
-              {language === 'ko'
-                ? '오늘의 옷차림은 어떠셨나요?'
-                : 'How did your outfit feel?'}
-            </p>
-            <div className="flex flex-col gap-[40px]">
-              <div className="flex flex-col gap-2">
-                <p className="text-[12px] font-medium text-zinc-400">
-                  {language === 'ko' ? '옷차림 평가하기' : 'Outfit Feels'}
-                </p>
-                <div className="flex flex-col gap-4">
-                  {['Perfect', 'Too_Hot', 'Too_Cold'].map((feel) => (
-                    <button
-                      key={feel}
-                      type="button"
-                      onClick={() => {
-                        const currentFeel = watch('selectedFeel')
-                        const selectedFeel =
-                          Feedback[feel as keyof typeof Feedback]
+            <div className="flex flex-col gap-[2rem]">
+              <p className="text-center text-[20px] font-semibold">
+                {language === 'ko'
+                  ? '오늘의 옷차림은 어떠셨나요?'
+                  : 'How did your outfit feel?'}
+              </p>
+              <div className="flex flex-col gap-[40px]">
+                <div className="flex flex-col gap-2">
+                  <p className="text-[12px] font-medium text-zinc-400">
+                    {language === 'ko' ? '옷차림 평가하기' : 'Outfit Feels'}
+                  </p>
+                  <div className="flex flex-col gap-4">
+                    {['Perfect', 'Too_Hot', 'Too_Cold'].map((feel) => (
+                      <button
+                        key={feel}
+                        type="button"
+                        onClick={() => {
+                          const currentFeel = watch('selectedFeel')
+                          const selectedFeel =
+                            Feedback[feel as keyof typeof Feedback]
 
-                        // 현재 선택된 상태와 같으면 "완벽함"으로 설정하지 않고 그대로 유지
-                        setValue(
-                          'selectedFeel',
-                          currentFeel === selectedFeel
-                            ? currentFeel
-                            : selectedFeel,
-                        )
-                      }}
-                      className={`flex items-center justify-center rounded-[16px] p-4 ${
-                        watch('selectedFeel') ===
-                        Feedback[feel as keyof typeof Feedback]
-                          ? 'bg-zinc-600 text-white'
-                          : 'bg-zinc-100'
-                      }`}
+                          // 현재 선택된 상태와 같으면 "완벽함"으로 설정하지 않고 그대로 유지
+                          setValue(
+                            'selectedFeel',
+                            currentFeel === selectedFeel
+                              ? currentFeel
+                              : selectedFeel,
+                          )
+                        }}
+                        className={`flex items-center justify-center rounded-[16px] p-4 ${
+                          watch('selectedFeel') ===
+                          Feedback[feel as keyof typeof Feedback]
+                            ? 'bg-zinc-600 text-white'
+                            : 'bg-zinc-100'
+                        }`}
+                      >
+                        {language === 'ko'
+                          ? feel === 'Perfect'
+                            ? '완벽함'
+                            : feel === 'Too_Hot'
+                              ? '너무 더움'
+                              : feel === 'Too_Cold'
+                                ? '너무 추움'
+                                : ''
+                          : feel.replace(/_/g, ' ')}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* 이미지 업로드 */}
+              <div className="flex flex-col gap-4 self-stretch">
+                <p className="text-[12px] font-medium text-zinc-400">
+                  {language === 'ko'
+                    ? '오늘의 옷차림을 기록으로 남겨보세요(선택)'
+                    : "Photo of today's outfit(Optional)"}
+                </p>
+
+                <div className="grid grid-cols-2 gap-[0.5rem]">
+                  {photos.map((photo, index) => (
+                    <div
+                      key={index}
+                      className="relative aspect-square w-full rounded-md border border-zinc-200"
                     >
-                      {language === 'ko'
-                        ? feel === 'Perfect'
-                          ? '완벽함'
-                          : feel === 'Too_Hot'
-                            ? '너무 더움'
-                            : feel === 'Too_Cold'
-                              ? '너무 추움'
-                              : ''
-                        : feel.replace(/_/g, ' ')}
-                    </button>
+                      <img
+                        src={photo}
+                        alt={`사진 ${index + 1}`}
+                        className="h-full w-full object-cover"
+                      />
+                      <XCircleIcon
+                        size={'2rem'}
+                        onClick={() => handleDeletePhoto(index)}
+                        className="absolute right-1 top-1 transform cursor-pointer p-1 text-zinc-700 transition-transform duration-200 hover:scale-125"
+                      />
+                    </div>
                   ))}
+                  {photos.length < maxPhotos && (
+                    <div className="flex aspect-square w-full flex-col items-center justify-center gap-[0.8rem] rounded-[0.75rem] border border-zinc-200">
+                      <div className="flex items-center gap-[0.3rem]">
+                        <div className="relative">
+                          <Camera
+                            size={'1.875rem'}
+                            onClick={camera ? handleCameraClick : undefined}
+                            onMouseOver={() => !camera && setShowText(true)}
+                            onMouseLeave={() => setShowText(false)}
+                            className={`cursor-pointer ${camera ? 'text-zinc-500' : 'cursor-not-allowed text-zinc-300'}`}
+                          />
+                          {!camera && showText && (
+                            <div className="absolute -left-1 -top-8 z-10 w-[10rem] whitespace-normal break-words rounded bg-black px-2 py-1 text-xs text-white">
+                              카메라 접근 권한이 허용되지 않았습니다.
+                            </div>
+                          )}
+                        </div>
+                        <ImageIcon
+                          size={'1.6875rem'}
+                          onClick={handleImageClick}
+                          className="cursor-pointer text-zinc-500"
+                        />
+                      </div>
+                      <p className="text-[1rem] font-medium text-zinc-400">
+                        ({photos.length}/{maxPhotos})
+                      </p>
+                      <input
+                        type="file"
+                        ref={fileInputRef}
+                        onChange={handleFileChange}
+                        className="hidden"
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
 
-            {/* 이미지 업로드 */}
-            <div className="flex flex-col gap-4">
-              <p className="text-[12px] font-medium text-zinc-400">
-                {language === 'ko'
-                  ? '오늘의 옷차림을 기록으로 남겨보세요(선택)'
-                  : "Photo of today's outfit(Optional)"}
-              </p>
-
-              <div className="grid grid-cols-2 gap-[0.5rem]">
-                {photos.map((photo, index) => (
-                  <div
-                    key={index}
-                    className="relative aspect-square w-full rounded-md border border-zinc-200"
-                  >
-                    <img
-                      src={photo}
-                      alt={`사진 ${index + 1}`}
-                      className="h-full w-full object-cover"
-                    />
-                    <XCircleIcon
-                      size={'2rem'}
-                      onClick={() => handleDeletePhoto(index)}
-                      className="absolute right-1 top-1 transform cursor-pointer p-1 text-zinc-700 transition-transform duration-200 hover:scale-125"
-                    />
-                  </div>
-                ))}
-                {photos.length < maxPhotos && (
-                  <div className="flex aspect-square w-full flex-col items-center justify-center gap-[0.8rem] rounded-[0.75rem] border border-zinc-200">
-                    <div className="flex items-center gap-[0.3rem]">
-                      <div className="relative">
-                        <Camera
-                          size={'1.875rem'}
-                          onClick={camera ? handleCameraClick : undefined}
-                          onMouseOver={() => !camera && setShowText(true)}
-                          onMouseLeave={() => setShowText(false)}
-                          className={`cursor-pointer ${camera ? 'text-zinc-500' : 'cursor-not-allowed text-zinc-300'}`}
-                        />
-                        {!camera && showText && (
-                          <div className="absolute -left-1 -top-8 z-10 w-[10rem] whitespace-normal break-words rounded bg-black px-2 py-1 text-xs text-white">
-                            카메라 접근 권한이 허용되지 않았습니다.
-                          </div>
-                        )}
-                      </div>
-                      <ImageIcon
-                        size={'1.6875rem'}
-                        onClick={handleImageClick}
-                        className="cursor-pointer text-zinc-500"
-                      />
-                    </div>
-                    <p className="text-[1rem] font-medium text-zinc-400">
-                      ({photos.length}/{maxPhotos})
-                    </p>
-                    <input
-                      type="file"
-                      ref={fileInputRef}
-                      onChange={handleFileChange}
-                      className="hidden"
-                    />
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className="flex gap-3">
+            <div className="flex justify-end gap-3">
               <button
                 type="button"
-                onClick={stopCamera}
                 className="flex-1 rounded-[8px] bg-zinc-100 px-4 py-2"
+                onClick={() => {
+                  router.push('/history')
+                  reset
+                }}
               >
                 {language === 'ko' ? '취소' : 'Cancel'}
               </button>

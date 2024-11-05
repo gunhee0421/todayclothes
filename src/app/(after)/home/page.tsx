@@ -32,6 +32,7 @@ const HomePage = () => {
   >([])
   const [city, setCity] = useState<string | null>(null)
   const [currentTemp, setCurrentTemp] = useState<number>(0)
+  const [click, setClick] = useState<boolean>(false)
   const dispatch = useDispatch()
 
   const { data: todayWeather } = useTodayWeatherQuery(
@@ -54,6 +55,10 @@ const HomePage = () => {
         },
         (error) => {
           setNavigatorError(true)
+          setGeolocation({
+            lat: 37.5665,
+            lon: 126.978,
+          })
         },
       )
     }
@@ -94,22 +99,41 @@ const HomePage = () => {
     }
   }, [todayWeather])
 
-  if (navigatorError) {
+  if (!loading && navigatorError && background) {
     return (
-      <div className={`flex min-h-screen flex-col gap-9 bg-rose-100 p-9`}>
-        <Header />
-        <LocationRequired />
-        <HomeAvatar />
-        <NavigationBar color="so_hot" openModal={openModal} />
+      <div
+        className={`flex min-h-screen flex-col gap-9 p-9 bg-${!loading ? background : 'white'}`}
+      >
+        <div>
+          <Header />
+        </div>
+        <div className="flex flex-1 flex-col justify-between">
+          {!click ? (
+            <LocationRequired setClick={setClick} />
+          ) : (
+            <TodayWeatherInfo
+              todayWeather={weatherSegments[currentTemp] as weatherSegments}
+              city={city as string}
+            />
+          )}
+          <HomeAvatarCarousel
+            data={weatherSegments}
+            setCurrentTemp={setCurrentTemp}
+          />
+          <NavigationBar color={background} openModal={openModal} />
+          {isVisible && (
+            <PlansModal isVisible={isVisible} closeModal={closeModal} />
+          )}
+        </div>
       </div>
     )
   }
 
   return (
     <>
-      {!loading && background ? (
+      {!loading && background && !navigatorError ? (
         <div
-          className={`flex min-h-screen flex-col gap-9 p-9 bg-${!loading ? background : 'white'}`}
+          className={`flex min-h-screen flex-col gap-9 p-9 transition-all duration-500 ease-in-out bg-${!loading ? background : 'white'}`}
         >
           <div>
             <Header />

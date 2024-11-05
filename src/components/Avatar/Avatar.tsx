@@ -16,44 +16,20 @@ import { weatherSegments } from '../Date/getRecommendData'
 import Slider from 'react-slick'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
-import { WeatherSave } from '../Info/Weather'
+import { BackGroundWeather, WeatherSave } from '../Info/Weather'
 
-export const HomeAvatar = () => {
-  const temp = useSelector((data: RootState) => data.currentTemp)
-
-  const getImageArray = () => {
-    if (temp == null) return so_hotImage
-    switch (temp) {
-      case 'fresh':
-        return freshImage
-      case 'cloud':
-        return cloudImage
-      case 'so_hot':
-        return so_hotImage
-      case 'hot':
-        return hotImage
-      case 'cold':
-        return coldImage
-      case 'so_cold':
-        return so_coldImage
-      default:
-        return []
-    }
-  }
-
-  const imageArray = getImageArray()
-
-  const randomImage = imageArray[Math.floor(Math.random() * imageArray.length)]
-
+export const HomeAvatar: React.FC<{ RandomImage: string }> = ({
+  RandomImage,
+}) => {
   return (
-    <div className="flex flex-shrink items-center justify-center sm:px-[2rem] sm:py-[1.25rem] md:px-[3rem] md:py-[1.75rem] lg:px-[4rem] lg:py-[2.5rem] xl:px-[6rem] xl:py-[3rem] 2xl:px-[8rem] 2xl:py-[5rem]">
-      {randomImage ? (
+    <div className="flex h-[50vh] flex-col items-center justify-center">
+      {RandomImage ? (
         <Image
-          src={randomImage}
+          src={RandomImage}
           alt="캐릭터 아바타"
           height={150}
           width={50}
-          className="h-[50vh]"
+          className="h-full w-full"
         />
       ) : (
         <p>No Image</p>
@@ -79,10 +55,39 @@ export const HomeAvatarCarousel: React.FC<{
       WeatherSave(data[next], dispatch)
     },
   }
+
+  const getImageArray = (temp: string) => {
+    if (temp == null) return so_hotImage
+    switch (temp) {
+      case 'fresh':
+        return freshImage
+      case 'cloud':
+        return cloudImage
+      case 'so_hot':
+        return so_hotImage
+      case 'hot':
+        return hotImage
+      case 'cold':
+        return coldImage
+      case 'so_cold':
+        return so_coldImage
+      default:
+        return []
+    }
+  }
+
+  const ImageArray = useMemo(() => {
+    if (!data) return []
+    return data.map((item) => {
+      const Array = getImageArray(BackGroundWeather(item.temp))
+      return Array[Math.floor(Math.random() * Array.length)]
+    })
+  }, [])
+
   return (
     <Slider {...settings}>
-      {data.map((item) => (
-        <HomeAvatar />
+      {ImageArray.map((item) => (
+        <HomeAvatar RandomImage={item} />
       ))}
     </Slider>
   )
@@ -112,7 +117,7 @@ export const LoadingAvatar = () => {
           alt="Avatar"
           width={200}
           height={450}
-          style={{ height: '60vh' }}
+          style={{ height: '50vh' }}
         />
       )}
       <p className="text-center align-middle font-notosanko text-[24px] font-bold">

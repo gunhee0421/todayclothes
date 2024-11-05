@@ -31,6 +31,21 @@ export const WeatherSave = (data: weatherSegments, dispatch: any) => {
     dispatch(setTemp('so_cold'))
   }
 }
+export const BackGroundWeather = (temp: number) => {
+  if (temp >= 29) {
+    return 'so_hot'
+  } else if (22 <= temp && temp < 29) {
+    return 'hot'
+  } else if (15 <= temp && temp < 22) {
+    return 'fresh'
+  } else if (9 <= temp && temp < 15) {
+    return 'cloud'
+  } else if (1 <= temp && temp < 9) {
+    return 'cold'
+  } else {
+    return 'so_cold'
+  }
+}
 
 export const TodayWeatherInfo: React.FC<{
   todayWeather: weatherSegments
@@ -59,10 +74,10 @@ export const TodayWeatherInfo: React.FC<{
             </p>
           </div>
           <div className="flex flex-col items-end justify-center gap-[0.5rem]">
-            <h1 className="text-right font-notosanko text-[1.05rem] font-bold sm:text-[1.5rem]">
-              {language == 'en' ? 'Low: ' : '최저: '} {todayWeather.maxTemp}°C /{' '}
+            <h1 className="text-right font-notosanko text-[1.05rem] font-bold transition-all duration-500 sm:text-[1.5rem]">
+              {language == 'en' ? 'Low: ' : '최저: '} {todayWeather.minTemp}°C /{' '}
               {language == 'en' ? 'High:' : '최고: '}
-              {todayWeather.minTemp}°C
+              {todayWeather.maxTemp}°C
             </h1>
             <p className="font-notosanko text-[0.8rem] font-semibold text-weatherSpanColor sm:text-weatherSpan">
               {language == 'en' ? 'Feels Like:' : '체감온도:'}{' '}

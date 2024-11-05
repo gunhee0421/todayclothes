@@ -2,11 +2,7 @@
 
 import { coordinate, WeatherResponse } from '@/api/services/weather/model'
 import { useTodayWeatherQuery } from '@/api/services/weather/quries'
-import {
-  HomeAvatar,
-  HomeAvatarCarousel,
-  LoadingAvatar,
-} from '@/components/Avatar/Avatar'
+import { LoadingAvatar } from '@/components/Avatar/Avatar'
 import Header from '@/components/Header/Header'
 import { TodayWeatherInfo, WeatherSave } from '@/components/Info/Weather'
 import LocationRequired from '@/components/LocationRequired/LocationRequried'
@@ -18,8 +14,10 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   getRecommendData,
+  getTimeData,
   weatherSegments,
 } from '@/components/Date/getRecommendData'
+import { HomeAvatarCarousel } from '@/components/Carousel/HomeCarousel'
 
 const HomePage = () => {
   const { isVisible, openModal, closeModal } = useModal()
@@ -95,7 +93,7 @@ const HomePage = () => {
 
   useEffect(() => {
     if (todayWeather) {
-      setWeatherSegments(getRecommendData(todayWeather))
+      setWeatherSegments(getTimeData(todayWeather))
     }
   }, [todayWeather])
 
@@ -114,6 +112,7 @@ const HomePage = () => {
             <TodayWeatherInfo
               todayWeather={weatherSegments[currentTemp] as weatherSegments}
               city={city as string}
+              index={currentTemp}
             />
           )}
           <HomeAvatarCarousel
@@ -142,6 +141,7 @@ const HomePage = () => {
             <TodayWeatherInfo
               todayWeather={weatherSegments[currentTemp] as weatherSegments}
               city={city as string}
+              index={currentTemp}
             />
             <HomeAvatarCarousel
               data={weatherSegments}

@@ -22,6 +22,7 @@ import { RootState } from '@/redux/store'
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useQueryClient } from '@tanstack/react-query'
+import Image from 'next/image'
 
 const Recommend = () => {
   const { isVisible, openModal, closeModal } = useModal()
@@ -48,42 +49,42 @@ const Recommend = () => {
     },
   )
   // todayWeather 데이터로 시간에 따른 날씨 필터링
-  // useEffect(() => {
-  //   if (todayWeather && weatherData?.location) {
-  //     const filteredWeather = getRecommendData(todayWeather, {
-  //       startTime: weatherData.startTime || '',
-  //       endTime: weatherData.endTime || '',
-  //     })
+  useEffect(() => {
+    if (todayWeather && weatherData?.location) {
+      const filteredWeather = getRecommendData(todayWeather, {
+        startTime: weatherData.startTime || '',
+        endTime: weatherData.endTime || '',
+      })
 
-  //     setQuery({
-  //       location: todayWeather.city.name,
-  //       startTime: weatherData.startTime || '',
-  //       endTime: weatherData.endTime || '',
-  //       type: weatherData.type || ActivityType.Indoor,
-  //       style: weatherData.style || ActivityStyle.Amekaji,
-  //       weather: filteredWeather.tempCode,
-  //       wind: filteredWeather.wind,
-  //       rain: filteredWeather.rain,
-  //       humidity: filteredWeather.hydrate,
-  //       feelsLike: filteredWeather.feels_like,
-  //       temp: filteredWeather.temp,
-  //     })
+      setQuery({
+        location: todayWeather.city.name,
+        startTime: weatherData.startTime || '',
+        endTime: weatherData.endTime || '',
+        type: weatherData.type || ActivityType.Indoor,
+        style: weatherData.style || ActivityStyle.Amekaji,
+        weather: filteredWeather.tempCode,
+        wind: filteredWeather.wind,
+        rain: filteredWeather.rain,
+        humidity: filteredWeather.hydrate,
+        feelsLike: filteredWeather.feels_like,
+        temp: filteredWeather.temp,
+      })
 
-  //     mutateActivityInfo({
-  //       location: todayWeather.city.name,
-  //       startTime: weatherData.startTime || '',
-  //       endTime: weatherData.endTime || '',
-  //       type: weatherData.type || ActivityType.Indoor,
-  //       style: weatherData.style || ActivityStyle.Amekaji,
-  //       weather: filteredWeather.tempCode,
-  //       wind: filteredWeather.wind,
-  //       rain: filteredWeather.rain,
-  //       humidity: filteredWeather.hydrate,
-  //       feelsLike: filteredWeather.feels_like,
-  //       temp: filteredWeather.temp,
-  //     })
-  //   }
-  // }, [weatherData?.location, todayWeather])
+      mutateActivityInfo({
+        location: todayWeather.city.name,
+        startTime: weatherData.startTime || '',
+        endTime: weatherData.endTime || '',
+        type: weatherData.type || ActivityType.Indoor,
+        style: weatherData.style || ActivityStyle.Amekaji,
+        weather: filteredWeather.tempCode,
+        wind: filteredWeather.wind,
+        rain: filteredWeather.rain,
+        humidity: filteredWeather.hydrate,
+        feelsLike: filteredWeather.feels_like,
+        temp: filteredWeather.temp,
+      })
+    }
+  }, [weatherData?.location, todayWeather])
 
   // comment 번역
   useEffect(() => {
@@ -103,34 +104,38 @@ const Recommend = () => {
   }, [todayWeather])
 
   return (
-    <div className="flex min-h-screen min-w-[600px] flex-col gap-9 bg-white p-9">
-      {/* {!loading ? (
-        <>
-          <Header />
-          <ActivityWeather
-            todayWeather={query as ActivityWeatherInfo}
-            type={weatherData?.type as ActivityType}
-            style={weatherData?.style as ActivityStyle}
-          />
-          <img
-            src={activityInfo?.result?.imgPath}
-            alt="이미지"
-            className="h-[600px] w-full py-[30px]"
-          />
-          <p className="font-notosanko text-[20px] font-semibold text-gray-500">
-            {language === 'en' && translatedText
-              ? translatedText[0]?.translations[0]?.text
-              : activityInfo?.result?.comment}
-          </p>
-          <NavigationBar color="zinc" openModal={openModal} />
-          {isVisible && (
-            <PlansModal isVisible={isVisible} closeModal={closeModal} />
-          )}
-        </>
+    <>
+      {!loading ? (
+        <div className="flex min-h-screen flex-col gap-9 bg-white p-9">
+          <div>
+            <Header />
+          </div>
+          <div className="flex flex-1 flex-col justify-between">
+            <ActivityWeather
+              todayWeather={query as ActivityWeatherInfo}
+              type={weatherData?.type as ActivityType}
+              style={weatherData?.style as ActivityStyle}
+            />
+            <Image
+              src={activityInfo?.result?.imgPath as ''}
+              alt="추천 받은 옷 이미지"
+              className="h-full w-full"
+            />
+            <p className="font-notosanko text-[20px] font-semibold text-gray-500">
+              {language === 'en' && translatedText
+                ? translatedText[0]?.translations[0]?.text
+                : activityInfo?.result?.comment}
+            </p>
+            <NavigationBar color="zinc" openModal={openModal} />
+            {isVisible && (
+              <PlansModal isVisible={isVisible} closeModal={closeModal} />
+            )}
+          </div>
+        </div>
       ) : (
         <LoadingAvatar />
-      )} */}
-    </div>
+      )}
+    </>
   )
 }
 

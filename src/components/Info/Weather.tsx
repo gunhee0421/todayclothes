@@ -50,7 +50,8 @@ export const BackGroundWeather = (temp: number) => {
 export const TodayWeatherInfo: React.FC<{
   todayWeather: weatherSegments
   city: string
-}> = ({ todayWeather, city }) => {
+  index: number
+}> = ({ todayWeather, city, index }) => {
   const language = useSelector((state: RootState) => state.language)
   const { translatedText, translate } = useTranslate()
 
@@ -72,12 +73,26 @@ export const TodayWeatherInfo: React.FC<{
             <p className="font-notosanko text-[0.8rem] text-weatherSubColor sm:text-weatherSub">
               {formatDate(language)}
             </p>
+            <span className="font-notosanko text-[1rem] font-semibold sm:text-weatherTem">
+              {language !== 'ko' && todayWeather.timeOfDay
+                ? todayWeather.timeOfDay.en
+                : todayWeather.timeOfDay?.ko || ''}
+            </span>
           </div>
           <div className="flex flex-col items-end justify-center gap-[0.5rem]">
             <h1 className="text-right font-notosanko text-[1.05rem] font-bold transition-all duration-500 sm:text-[1.5rem]">
-              {language == 'en' ? 'Low: ' : '최저: '} {todayWeather.minTemp}°C /{' '}
-              {language == 'en' ? 'High:' : '최고: '}
-              {todayWeather.maxTemp}°C
+              {index == 0 ? (
+                <>
+                  {language == 'en' ? 'Low: ' : '최저: '} {todayWeather.minTemp}
+                  °C <span className="">/</span>{' '}
+                  {language == 'en' ? 'High:' : '최고: '}
+                  {todayWeather.maxTemp}°C
+                </>
+              ) : (
+                <>
+                  {language == 'en' ? 'Temp: ' : '온도: '} {todayWeather.temp}°C
+                </>
+              )}
             </h1>
             <p className="font-notosanko text-[0.8rem] font-semibold text-weatherSpanColor sm:text-weatherSpan">
               {language == 'en' ? 'Feels Like:' : '체감온도:'}{' '}
@@ -112,32 +127,32 @@ export const HistoryWeatherInfo: React.FC<activityHistoryInfo> = (props) => {
   }, [props, language])
 
   return (
-    <div className="flex w-full content-center items-start self-stretch">
+    <div className="flex h-fit w-full max-w-lg content-center items-start self-stretch">
       <div className="flex w-full flex-row justify-between font-notosanko">
-        <div className="flex flex-col gap-[8px]">
-          <h1 className="text-weatherTitle">
+        <div className="flex flex-col gap-[0.5rem]">
+          <h1 className="font-notosanko text-[1.5rem] font-medium sm:text-weatherTitle">
             {language === 'ko' && translatedText
               ? translatedText[0]?.translations[0]?.text
               : props.location}
           </h1>
-          <span className="text-weatherSub text-weatherSubColor">
+          <span className="font-notosanko text-[0.8rem] text-weatherSubColor sm:text-weatherSub">
             {formatDate(language)}
           </span>
-          <span className="text-[20px] font-medium">
+          <span className="font-notosanko text-[1rem] sm:text-weatherTem">
             {translateActivityType(props.type, language)},{' '}
             {translateActivityStyle(props.style, language)}
           </span>
         </div>
-        <div className="flex flex-col content-center items-end gap-[8px]">
-          <h1 className="font-notosanko text-weatherTem">
+        <div className="flex flex-col items-end justify-center gap-[0.5rem]">
+          <h1 className="text-right font-notosanko text-[1.05rem] font-bold transition-all duration-500 sm:text-[1.5rem]">
             <span className="font-toss">{emoji}</span> {Math.round(props.temp)}
             °C ({description})
           </h1>
-          <p className="font-notosanko text-weatherSpan text-weatherSpanColor">
+          <p className="font-notosanko text-[0.8rem] font-semibold text-weatherSpanColor sm:text-weatherSpan">
             {language === 'en' ? 'Feels Like: ' : '체감온도: '}{' '}
             {Math.round(props.feelsLike)}°C
           </p>
-          <p className="font-notosanko text-weatherSpan text-weatherSubColor">
+          <p className="text-right font-notosanko text-[0.8rem] text-gray-700 sm:text-[1rem]">
             <span className="font-toss">🌧️</span> {Math.round(props.rain * 100)}
             % <span className="font-toss">💧</span> {Math.round(props.humidity)}
             % <span className="font-toss">💨</span>{' '}

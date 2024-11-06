@@ -16,13 +16,15 @@ import { useForm } from 'react-hook-form'
 import { useActivityReview } from '@/api/services/recommend/quries'
 import { ActivityReview, Feedback } from '@/api/services/recommend/model'
 import { useQueryClient } from '@tanstack/react-query'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 
-const Review = ({ clothesId }: { clothesId: string }) => {
+const Review = () => {
   const language = useSelector((state: RootState) => state.language)
   const activityReview = useActivityReview()
   const queryClient = useQueryClient()
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const clothesId = searchParams.get('clothesId')
 
   const { handleSubmit, setValue, watch, reset } = useForm<{
     selectedFeel: Feedback | null

@@ -141,22 +141,32 @@ const Review = ({ clothesId }: { clothesId: string }) => {
   }
 
   useEffect(() => {
-    navigator.mediaDevices
-      .getUserMedia({ video: true })
-      .then(() => {
-        setCamera(true)
+    navigator.permissions
+      .query({ name: 'camera' as PermissionName })
+      .then((permissionStatus) => {
+        setCamera(permissionStatus.state === 'granted')
+        // 권한 상태가 변경될 때마다 업데이트
+        permissionStatus.onchange = () => {
+          setCamera(permissionStatus.state === 'granted')
+        }
       })
       .catch(() => {
-        setCamera(false)
+        setCamera(false) // 권한 확인이 실패할 경우 false로 설정
       })
   }, [])
+
+  useEffect(() => {
+    if (!camera && isCameraOn) {
+      stopCamera()
+    }
+  }, [camera, isCameraOn])
 
   const onSubmit = async (data: {
     selectedFeel: Feedback | null
     selectedFile: File | null
     photoCount: number
   }) => {
-    const { selectedFeel, selectedFile } = data
+    const { selectedFeel } = data
 
     const formData = new FormData()
 
@@ -184,14 +194,13 @@ const Review = ({ clothesId }: { clothesId: string }) => {
         },
       })
     } catch (error) {
-      console.log('FormData:', formData)
       console.error('Error submitting review:', error)
     }
   }
 
   return (
     <>
-      {isCameraOn ? (
+      {isCameraOn && camera ? (
         <div className="fixed inset-0 z-50 flex flex-col">
           <video
             ref={videoRef}
@@ -199,16 +208,20 @@ const Review = ({ clothesId }: { clothesId: string }) => {
             muted
             className="h-full w-full object-cover"
           />
-          <div className="flex w-full items-center justify-center bg-black py-8">
-            <button
-              className="flex rounded-full bg-white px-8 py-8"
-              onClick={() => {
-                console.log('Button clicked') // 버튼 클릭 시 콘솔 출력
-                takePhoto() // takePhoto 호출
-              }}
+          <div className="flex w-full items-center justify-between bg-black px-6 py-8">
+            <XIcon
+              size={'3.5rem'}
+              className="cursor-pointer text-white"
+              onClick={stopCamera}
             />
+            <button
+              className="flex cursor-pointer rounded-full bg-white p-1"
+              onClick={takePhoto}
+            >
+              <div className="rounded-full border border-black bg-white p-6" />
+            </button>
+            <div className="bg-white p-6"></div>
           </div>
-          {/* <canvas ref={canvasRef} className="hidden" /> */}
         </div>
       ) : (
         <div className="flex min-h-screen w-full max-w-[37.5rem] items-center justify-between bg-white p-[2rem]">

@@ -154,7 +154,7 @@ const HomePage = () => {
           </div>
         </div>
       ) : (
-        <div>
+        <div className="min-h-screen bg-white">
           <LoadingAvatar />
         </div>
       )}

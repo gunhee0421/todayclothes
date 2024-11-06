@@ -84,7 +84,7 @@ export const TodayWeatherInfo: React.FC<{
               {index == 0 ? (
                 <>
                   {language == 'en' ? 'Low: ' : '최저: '}{' '}
-                  {Math.round(todayWeather.minTemp)}°C °C{' '}
+                  {Math.round(todayWeather.minTemp)}°C{' '}
                   <span className="">/</span>{' '}
                   {language == 'en' ? 'High:' : '최고: '}
                   {Math.round(todayWeather.maxTemp)}°C

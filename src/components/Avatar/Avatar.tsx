@@ -1,8 +1,7 @@
 'use client'
 
 import { RootState } from '@/redux/store'
-import { useSelector } from 'react-redux'
-
+import { useDispatch, useSelector } from 'react-redux'
 import {
   freshImage,
   coldImage,
@@ -12,46 +11,34 @@ import {
   cloudImage,
 } from './AvatarImg'
 import Image from 'next/image'
-import React, { useEffect, useMemo, useState } from 'react'
-import { clearTimeout } from 'timers'
+import React, { SetStateAction, useEffect, useMemo, useState } from 'react'
+import { weatherSegments } from '../Date/getRecommendData'
+import Slider from 'react-slick'
+import 'slick-carousel/slick/slick.css'
+import 'slick-carousel/slick/slick-theme.css'
+import { BackGroundWeather, WeatherSave } from '../Info/Weather'
+import { WeatherResponse } from '@/api'
 
-export const HomeAvatar = () => {
-  const temp = useSelector((data: RootState) => data.currentTemp)
-
-  const getImageArray = () => {
-    if (temp == null) return so_hotImage
-    switch (temp) {
-      case 'fresh':
-        return freshImage
-      case 'cloud':
-        return cloudImage
-      case 'so_hot':
-        return so_hotImage
-      case 'hot':
-        return hotImage
-      case 'cold':
-        return coldImage
-      case 'so_cold':
-        return so_coldImage
-      default:
-        return []
-    }
-  }
-
-  const imageArray = getImageArray()
-
-  const randomImage = imageArray[Math.floor(Math.random() * imageArray.length)]
-
+export const HomeAvatar: React.FC<{ RandomImage: string }> = ({
+  RandomImage,
+}) => {
   return (
-    <div className="flex h-full flex-shrink items-center justify-center sm:px-[2rem] sm:py-[1.25rem] md:px-[3rem] md:py-[1.75rem] lg:px-[4rem] lg:py-[2.5rem] xl:px-[6rem] xl:py-[3rem] 2xl:px-[8rem] 2xl:py-[5rem]">
-      {randomImage ? (
-        <Image src={randomImage} alt="Avatar" width={200} height={450} />
+    <div className="flex h-[50vh] flex-col items-center justify-center">
+      {RandomImage ? (
+        <Image
+          src={RandomImage}
+          alt="캐릭터 아바타"
+          height={150}
+          width={50}
+          className="h-full w-full"
+        />
       ) : (
         <p>No Image</p>
       )}
     </div>
   )
 }
+
 export const LoadingAvatar = () => {
   const language = useSelector((state: RootState) => state.language)
 
@@ -79,7 +66,7 @@ export const LoadingAvatar = () => {
           style={{ height: '60vh' }}
         />
       )}
-      <p className="text-center align-middle font-notosanko text-[24px] font-bold">
+      <p className="text-center align-middle font-notosanko text-[12px] font-bold sm:text-[24px]">
         {language === 'en' ? (
           <>
             Generating styles...

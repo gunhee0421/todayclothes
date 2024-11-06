@@ -7,8 +7,8 @@ import { RootState } from '@/redux/store'
 import { Pencil } from 'lucide-react'
 import { useActivityReview } from '@/api/services/recommend/quries'
 import { useModal } from '@/hooks/useModal/useModal'
-import ReviewModal from '../Modal/ReviewModal'
 import Link from 'next/link'
+import { HistoryAvatarCarousel } from '../Carousel/HistoryCarousel'
 
 type Language = 'en' | 'ko'
 
@@ -48,16 +48,10 @@ export const HistoryCard: React.FC<activityHistoryInfo> = (props) => {
   const reviewEmoji = getReviewEmoji(props.review?.feedback)
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-1 flex-col justify-between gap-6">
       <HistoryWeatherInfo {...props} />
-      <Image
-        src={props?.imgPath || ''}
-        alt="error"
-        width={520}
-        height={540}
-        className="h-[540px] w-[520px]"
-      />
-      <div className="flex items-center justify-between rounded-[16px] bg-zinc-100 p-4 font-notosanko text-[16px]">
+      <HistoryAvatarCarousel data={props} />
+      <div className="mt-2 flex items-center justify-between rounded-[16px] bg-zinc-100 p-4 font-notosanko text-[16px] sm:mt-4">
         {props.review?.feedback ? (
           <span className={`${props.review?.feedback ? 'text-zinc-400' : ''}`}>
             {language === 'en' ? 'Written Review' : '작성된 리뷰'}

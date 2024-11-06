@@ -50,3 +50,11 @@
 .bg-rain {
   @apply bg-gray-100;
 }
+
+.slick-dots li button:focus:before {
+  opacity: 0.25 !important;
+}
+
+.slick-dots li.slick-active button:focus:before {
+  opacity: 0.75 !important;
+}

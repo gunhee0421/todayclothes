@@ -65,7 +65,7 @@ export const TodayWeatherInfo: React.FC<{
       {
         <div className="flex w-full flex-row justify-between">
           <div className="flex flex-col gap-[0.5rem]">
-            <h1 className="font-notosanko text-[1.5rem] font-medium sm:text-weatherTitle">
+            <h1 className="font-notosanko text-[1.5rem] font-medium transition-all duration-500 sm:text-weatherTitle">
               {language !== 'ko' && translatedText
                 ? translatedText[0]?.translations[0]?.text
                 : city}
@@ -83,10 +83,11 @@ export const TodayWeatherInfo: React.FC<{
             <h1 className="text-right font-notosanko text-[1.05rem] font-bold transition-all duration-500 sm:text-[1.5rem]">
               {index == 0 ? (
                 <>
-                  {language == 'en' ? 'Low: ' : '최저: '} {todayWeather.minTemp}
-                  °C <span className="">/</span>{' '}
+                  {language == 'en' ? 'Low: ' : '최저: '}{' '}
+                  {Math.round(todayWeather.minTemp)}°C °C{' '}
+                  <span className="">/</span>{' '}
                   {language == 'en' ? 'High:' : '최고: '}
-                  {todayWeather.maxTemp}°C
+                  {Math.round(todayWeather.maxTemp)}°C
                 </>
               ) : (
                 <>
@@ -94,11 +95,11 @@ export const TodayWeatherInfo: React.FC<{
                 </>
               )}
             </h1>
-            <p className="font-notosanko text-[0.8rem] font-semibold text-weatherSpanColor sm:text-weatherSpan">
+            <p className="font-notosanko text-[0.8rem] font-semibold text-weatherSpanColor transition-all duration-500 sm:text-weatherSpan">
               {language == 'en' ? 'Feels Like:' : '체감온도:'}{' '}
               {todayWeather.feels_like}°C
             </p>
-            <p className="text-right font-notosanko text-[0.8rem] text-gray-700 sm:text-[1rem]">
+            <p className="text-right font-notosanko text-[0.8rem] text-gray-700 transition-all duration-500 sm:text-[1rem]">
               <span className="font-toss">🌧️</span>{' '}
               {Math.round(todayWeather.rain * 100)}%{' '}
               <span className="font-toss">💧</span>{' '}

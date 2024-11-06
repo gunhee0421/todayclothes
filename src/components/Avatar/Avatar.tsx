@@ -63,10 +63,10 @@ export const LoadingAvatar = () => {
           alt="Avatar"
           width={200}
           height={450}
-          style={{ height: '50vh' }}
+          style={{ height: '60vh' }}
         />
       )}
-      <p className="text-center align-middle font-notosanko text-[24px] font-bold">
+      <p className="text-center align-middle font-notosanko text-[12px] font-bold sm:text-[24px]">
         {language === 'en' ? (
           <>
             Generating styles...

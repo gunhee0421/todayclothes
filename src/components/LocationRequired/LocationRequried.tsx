@@ -9,28 +9,41 @@ const LocationRequired: React.FC<{
   const language = useSelector((state: RootState) => state.language)
 
   return (
-    <div className="flex h-[120px] w-full flex-shrink-0 items-center justify-center rounded-[8px] bg-white shadow-md">
+    <>
       {language === 'ko' ? (
-        <div className="font-notosanko text-[24px] font-bold">
+        <div className="flex h-full w-full flex-col rounded-[4px] bg-white px-3 py-2 font-notosanko text-[0.75rem] font-bold shadow-md sm:rounded-[8px] sm:px-6 sm:py-4 sm:text-[24px]">
           <div className="flex flex-row items-center justify-between">
             <p>
               <span className="font-toss">📍</span> 위치 정보가 필요합니다.
             </p>
-            <X size={25} onClick={() => setClick(true)} />
+            <X
+              size={12}
+              onClick={() => setClick(true)}
+              className="cursor-pointer sm:size-6"
+            />
           </div>
-          <p className="text-[22px] font-medium">
+          <p className="text-[0.625rem] font-bold sm:text-[22px]">
             날씨 정보를 확인하려면 위치 사용에 동의해주세요.
           </p>
         </div>
       ) : (
-        <div className="font-notosanko text-[22px] font-bold">
-          <span className="font-toss">📍</span> Location Access Required
-          <p className="text-[18px] font-medium">
+        <div className="flex h-full w-full flex-col rounded-[4px] bg-white px-3 py-2 font-notosanko text-[0.75rem] font-bold shadow-md sm:rounded-[8px] sm:px-6 sm:py-4 sm:text-[24px]">
+          <div className="flex flex-row items-center justify-between">
+            <p>
+              <span className="font-toss">📍</span> Location Access Required
+            </p>
+            <X
+              size={12}
+              onClick={() => setClick(true)}
+              className="cursor-pointer sm:size-6"
+            />
+          </div>
+          <p className="text-[0.5rem] font-bold sm:text-[1rem]">
             Please enable location services for weather information.
           </p>
         </div>
       )}
-    </div>
+    </>
   )
 }
 

@@ -88,7 +88,7 @@ export default function HistoryPage() {
   return (
     <>
       {history ? (
-        <div className="flex min-h-screen flex-col gap-9 p-9">
+        <div className="flex min-h-screen flex-col gap-9 bg-white p-9">
           <div>
             <Header />
           </div>

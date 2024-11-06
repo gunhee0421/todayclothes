@@ -50,12 +50,13 @@ export interface ActivityWeatherInfo {
 }
 
 export interface activityHistoryInfo {
-  clothesId: string
-  imgPath: string
+  clothesId: number
+  imgPath: string | null
+  myImgPaths: string[]
   location: string
   type: ActivityType
   style: ActivityStyle
-  review: WeatherReview
+  review: WeatherReview | null
   weather: number
   wind: number
   rain: number

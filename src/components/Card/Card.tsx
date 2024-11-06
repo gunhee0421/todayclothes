@@ -7,7 +7,8 @@ import { RootState } from '@/redux/store'
 import { Pencil } from 'lucide-react'
 import { useActivityReview } from '@/api/services/recommend/quries'
 import { useModal } from '@/hooks/useModal/useModal'
-import ReviewModal from '../Modal/ReviewModal'
+import Link from 'next/link'
+import { HistoryAvatarCarousel } from '../Carousel/HistoryCarousel'
 
 type Language = 'en' | 'ko'
 
@@ -45,23 +46,12 @@ const getReviewFeedback = (
 export const HistoryCard: React.FC<activityHistoryInfo> = (props) => {
   const language = useSelector((state: RootState) => state.language) as Language
   const reviewEmoji = getReviewEmoji(props.review?.feedback)
-  const { isVisible, openModal, closeModal } = useModal()
-
-  const handleOnClick = () => {
-    openModal()
-  }
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-1 flex-col justify-between gap-6">
       <HistoryWeatherInfo {...props} />
-      <Image
-        src={props?.imgPath || ''}
-        alt="error"
-        width={520}
-        height={540}
-        className="h-[540px] w-[520px]"
-      />
-      <div className="flex items-center justify-between rounded-[16px] bg-zinc-100 p-4 font-notosanko text-[16px]">
+      <HistoryAvatarCarousel data={props} />
+      <div className="mt-2 flex items-center justify-between rounded-[16px] bg-zinc-100 p-4 font-notosanko text-[16px] sm:mt-4">
         {props.review?.feedback ? (
           <span className={`${props.review?.feedback ? 'text-zinc-400' : ''}`}>
             {language === 'en' ? 'Written Review' : '작성된 리뷰'}
@@ -77,23 +67,11 @@ export const HistoryCard: React.FC<activityHistoryInfo> = (props) => {
             <span className="font-toss text-[1.5rem]">{reviewEmoji}</span>
           </div>
         ) : (
-          <Pencil
-            className="cursor-pointer"
-            onClick={handleOnClick}
-            size={20}
-          />
+          <Link href={`/review?clothesId=${props.clothesId}`}>
+            <Pencil className="cursor-pointer" size={20} />
+          </Link>
         )}
       </div>
-
-      {isVisible && (
-        <>
-          <ReviewModal
-            clothesId={props.clothesId}
-            isVisible={isVisible}
-            closeModal={closeModal}
-          />
-        </>
-      )}
     </div>
   )
 }

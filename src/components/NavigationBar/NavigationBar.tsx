@@ -28,7 +28,7 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ color, openModal }) => {
 
   return (
     <div
-      className={`flex w-full max-w-lg items-center justify-between rounded-[2.5rem] px-[2.5rem] py-[0.7rem] shadow-base sm:px-[3.5rem] sm:py-[0.5rem] ${variants[color].bg}`}
+      className={`flex w-full max-w-lg items-center justify-between rounded-[2.5rem] px-[2.5rem] py-[0.7rem] shadow-base transition-all duration-500 ease-in-out sm:px-[3.5rem] sm:py-[0.5rem] ${variants[color].bg}`}
     >
       <Search
         className={`size-[1.6rem] cursor-pointer sm:size-[2.5rem] ${variants[color].text}`}

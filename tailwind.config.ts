@@ -52,7 +52,7 @@ const config = {
         weatherTem: [
           '24px',
           {
-            fontWeight: 700,
+            fontWeight: 500,
           },
         ],
         weatherSpan: [

@@ -10,11 +10,12 @@ import { setTemp } from '@/redux/slice/CurrentTempSlice'
 import { activityHistoryInfo } from '@/api/services/recommend/model'
 import { translateActivityStyle, translateActivityType } from './translation'
 import { getWeatherDescription } from './condition'
+import { weatherSegments } from '../Date/getRecommendData'
 
 type Language = 'en' | 'ko'
 
-export const WeatherSave = (data: WeatherResponse, dispatch: any) => {
-  const temp = data.list[0].main.feels_like
+export const WeatherSave = (data: weatherSegments, dispatch: any) => {
+  const temp = data.temp
 
   if (temp >= 29) {
     dispatch(setTemp('so_hot'))
@@ -30,39 +31,41 @@ export const WeatherSave = (data: WeatherResponse, dispatch: any) => {
     dispatch(setTemp('so_cold'))
   }
 }
+export const BackGroundWeather = (temp: number) => {
+  if (temp >= 29) {
+    return 'so_hot'
+  } else if (22 <= temp && temp < 29) {
+    return 'hot'
+  } else if (15 <= temp && temp < 22) {
+    return 'fresh'
+  } else if (9 <= temp && temp < 15) {
+    return 'cloud'
+  } else if (1 <= temp && temp < 9) {
+    return 'cold'
+  } else {
+    return 'so_cold'
+  }
+}
 
 export const TodayWeatherInfo: React.FC<{
-  todayWeather: WeatherResponse
+  todayWeather: weatherSegments
   city: string
-}> = ({ todayWeather, city }) => {
+  index: number
+}> = ({ todayWeather, city, index }) => {
   const language = useSelector((state: RootState) => state.language)
   const { translatedText, translate } = useTranslate()
 
   // 날씨 정보 호출 후, 언어 번역
   useEffect(() => {
     translate(city, 'en')
-    console.log(translatedText, city)
   }, [])
-
-  // 하루동안의 1시간 단위의 정보를 바탕으로 최고, 최저, 강수 확률 계산
-  const SliceData =
-    todayWeather?.list.slice(0, 13).map((item) => ({
-      tempMin: item.main.temp_min,
-      tempMax: item.main.temp_max,
-      rain: item.pop,
-    })) || []
-
-  const tempMin = Math.min(...SliceData.map((t) => t.tempMin))
-  const tempMax = Math.max(...SliceData.map((t) => t.tempMax))
-  const rainPercent =
-    SliceData.reduce((acc, cur) => acc + cur.rain, 0) / SliceData.length
 
   return (
     <div className="flex h-[97px] w-full max-w-lg content-center items-start self-stretch">
       {
         <div className="flex w-full flex-row justify-between">
           <div className="flex flex-col gap-[0.5rem]">
-            <h1 className="font-notosanko text-[1.5rem] font-medium sm:text-weatherTitle">
+            <h1 className="font-notosanko text-[1.5rem] font-medium transition-all duration-500 sm:text-weatherTitle">
               {language !== 'ko' && translatedText
                 ? translatedText[0]?.translations[0]?.text
                 : city}
@@ -70,24 +73,39 @@ export const TodayWeatherInfo: React.FC<{
             <p className="font-notosanko text-[0.8rem] text-weatherSubColor sm:text-weatherSub">
               {formatDate(language)}
             </p>
+            <span className="font-notosanko text-[1rem] font-semibold sm:text-weatherTem">
+              {language !== 'ko' && todayWeather.timeOfDay
+                ? todayWeather.timeOfDay.en
+                : todayWeather.timeOfDay?.ko || ''}
+            </span>
           </div>
           <div className="flex flex-col items-end justify-center gap-[0.5rem]">
-            <h1 className="text-right font-notosanko text-[1.05rem] font-bold sm:text-[1.5rem]">
-              {language == 'en' ? 'Low: ' : '최저: '} {Math.round(tempMin)}°C /{' '}
-              {language == 'en' ? 'High:' : '최고: '}
-              {Math.round(tempMax)}°C
+            <h1 className="text-right font-notosanko text-[1.05rem] font-bold transition-all duration-500 sm:text-[1.5rem]">
+              {index == 0 ? (
+                <>
+                  {language == 'en' ? 'Low: ' : '최저: '}{' '}
+                  {Math.round(todayWeather.minTemp)}°C °C{' '}
+                  <span className="">/</span>{' '}
+                  {language == 'en' ? 'High:' : '최고: '}
+                  {Math.round(todayWeather.maxTemp)}°C
+                </>
+              ) : (
+                <>
+                  {language == 'en' ? 'Temp: ' : '온도: '} {todayWeather.temp}°C
+                </>
+              )}
             </h1>
-            <p className="font-notosanko text-[0.8rem] font-semibold text-weatherSpanColor sm:text-weatherSpan">
+            <p className="font-notosanko text-[0.8rem] font-semibold text-weatherSpanColor transition-all duration-500 sm:text-weatherSpan">
               {language == 'en' ? 'Feels Like:' : '체감온도:'}{' '}
-              {Math.round(todayWeather?.list[0].main.feels_like)}°C
+              {todayWeather.feels_like}°C
             </p>
-            <p className="text-right font-notosanko text-[0.8rem] text-gray-700 sm:text-[1rem]">
+            <p className="text-right font-notosanko text-[0.8rem] text-gray-700 transition-all duration-500 sm:text-[1rem]">
               <span className="font-toss">🌧️</span>{' '}
-              {Math.round(rainPercent * 100)}%{' '}
+              {Math.round(todayWeather.rain * 100)}%{' '}
               <span className="font-toss">💧</span>{' '}
-              {Math.round(todayWeather?.list[0].main.humidity)}%{' '}
+              {Math.round(todayWeather.hydrate)}%{' '}
               <span className="font-toss">💨</span>{' '}
-              {Math.round(todayWeather?.list[0].wind.speed * 3.6)}
+              {Math.round(todayWeather.wind * 3.6)}
               km/h
             </p>
           </div>
@@ -110,32 +128,32 @@ export const HistoryWeatherInfo: React.FC<activityHistoryInfo> = (props) => {
   }, [props, language])
 
   return (
-    <div className="flex w-full content-center items-start self-stretch">
+    <div className="flex h-fit w-full max-w-lg content-center items-start self-stretch">
       <div className="flex w-full flex-row justify-between font-notosanko">
-        <div className="flex flex-col gap-[8px]">
-          <h1 className="text-weatherTitle">
+        <div className="flex flex-col gap-[0.5rem]">
+          <h1 className="font-notosanko text-[1.5rem] font-medium sm:text-weatherTitle">
             {language === 'ko' && translatedText
               ? translatedText[0]?.translations[0]?.text
               : props.location}
           </h1>
-          <span className="text-weatherSub text-weatherSubColor">
+          <span className="font-notosanko text-[0.8rem] text-weatherSubColor sm:text-weatherSub">
             {formatDate(language)}
           </span>
-          <span className="text-[20px] font-medium">
+          <span className="font-notosanko text-[1rem] sm:text-weatherTem">
             {translateActivityType(props.type, language)},{' '}
             {translateActivityStyle(props.style, language)}
           </span>
         </div>
-        <div className="flex flex-col content-center items-end gap-[8px]">
-          <h1 className="font-notosanko text-weatherTem">
+        <div className="flex flex-col items-end justify-center gap-[0.5rem]">
+          <h1 className="text-right font-notosanko text-[1.05rem] font-bold transition-all duration-500 sm:text-[1.5rem]">
             <span className="font-toss">{emoji}</span> {Math.round(props.temp)}
             °C ({description})
           </h1>
-          <p className="font-notosanko text-weatherSpan text-weatherSpanColor">
+          <p className="font-notosanko text-[0.8rem] font-semibold text-weatherSpanColor sm:text-weatherSpan">
             {language === 'en' ? 'Feels Like: ' : '체감온도: '}{' '}
             {Math.round(props.feelsLike)}°C
           </p>
-          <p className="font-notosanko text-weatherSpan text-weatherSubColor">
+          <p className="text-right font-notosanko text-[0.8rem] text-gray-700 sm:text-[1rem]">
             <span className="font-toss">🌧️</span> {Math.round(props.rain * 100)}
             % <span className="font-toss">💧</span> {Math.round(props.humidity)}
             % <span className="font-toss">💨</span>{' '}

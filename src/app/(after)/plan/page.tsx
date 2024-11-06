@@ -93,6 +93,12 @@ const Plan: React.FC = () => {
 
   const isFormValid = watchedValues.every((value) => value !== null)
 
+  // Google Maps API 로드 확인 함수
+  const isGoogleMapsLoaded = () =>
+    typeof window !== 'undefined' &&
+    typeof window.google !== 'undefined' &&
+    typeof window.google.maps !== 'undefined'
+
   // 현재 위치 정보를 가져오는 함수
   const getCurrentLocation = () => {
     if (navigator.geolocation) {
@@ -100,24 +106,33 @@ const Plan: React.FC = () => {
         async (position) => {
           const { latitude, longitude } = position.coords
 
-          // 좌표를 사용하여 주소를 가져오기
-          const results = await geocodeByLatLng({
-            lat: latitude,
-            lng: longitude,
-          })
-
-          // 기본값 설정
+          // 기본값으로 좌표를 먼저 설정
           setValue('placeCoordinates', {
             lat: latitude,
             lon: longitude,
           })
 
-          if (results.length > 0) {
-            const address = results[0]
-            setValue('selectedPlace', {
-              label: address.formatted_address,
-              value: { place_id: address.place_id },
-            })
+          // Google Maps API가 로드되었는지 확인 후에만 geocodeByLatLng 호출
+          if (latitude && longitude && isGoogleMapsLoaded()) {
+            try {
+              // 좌표를 사용하여 주소를 가져오기
+              const results = await geocodeByLatLng({
+                lat: latitude,
+                lng: longitude,
+              })
+
+              if (results.length > 0) {
+                const address = results[0]
+                setValue('selectedPlace', {
+                  label: address.formatted_address,
+                  value: { place_id: address.place_id },
+                })
+              }
+            } catch (error) {
+              console.error('Error fetching address:', error)
+            }
+          } else {
+            console.error('Google Maps API is not loaded.')
           }
         },
         (error) => {

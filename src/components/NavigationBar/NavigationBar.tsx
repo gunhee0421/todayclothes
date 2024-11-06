@@ -15,7 +15,7 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ color, openModal }) => {
   const handleSearchClick = () => {}
 
   const handlePlusClick = () => {
-    openModal()
+    router.push('/plan')
   }
 
   const handleUserClick = () => {

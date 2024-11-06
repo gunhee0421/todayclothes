@@ -3,19 +3,36 @@ export enum ActivityType {
   Outdoor = 'OUTDOORS',
 }
 
+export enum Gender {
+  Female = 'FEMALE',
+  Male = 'MALE',
+}
+
+export enum TimeOfDay {
+  Morning = 'Morning',
+  Afternoon = 'Afternoon',
+  Evening = 'Evening',
+  Night = 'Night',
+}
+
 export enum ActivityStyle {
-  BusinessCasual = 'BUSINESS_CASUAL',
-  Minimal = 'MINIMAL',
-  Street = 'STREET',
   Casual = 'CASUAL',
-  Sports = 'SPORTS',
-  Amekaji = 'AMEKAJI',
+  Business = 'BUSINESS',
+  Street = 'STREET',
+  Formal = 'FORMAL',
+  Sporty = 'SPORTY',
+  Outdoor = 'OUTDOOR',
 }
 
 export enum Feedback {
   Perfect = 'PERFECT',
   Too_Hot = 'HOT',
   Too_Cold = 'COLD',
+}
+
+export interface PlaceCoordinates {
+  lat: number | null
+  lon: number | null
 }
 
 export interface ActivityWeatherInfo {

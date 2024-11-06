@@ -7,7 +7,7 @@ import { RootState } from '@/redux/store'
 import { Pencil } from 'lucide-react'
 import { useActivityReview } from '@/api/services/recommend/quries'
 import { useModal } from '@/hooks/useModal/useModal'
-import ReviewModal from '../Modal/ReviewModal'
+import Link from 'next/link'
 import { HistoryAvatarCarousel } from '../Carousel/HistoryCarousel'
 
 type Language = 'en' | 'ko'
@@ -46,11 +46,6 @@ const getReviewFeedback = (
 export const HistoryCard: React.FC<activityHistoryInfo> = (props) => {
   const language = useSelector((state: RootState) => state.language) as Language
   const reviewEmoji = getReviewEmoji(props.review?.feedback)
-  const { isVisible, openModal, closeModal } = useModal()
-
-  const handleOnClick = () => {
-    openModal()
-  }
 
   return (
     <div className="flex flex-1 flex-col justify-between gap-6">
@@ -72,23 +67,11 @@ export const HistoryCard: React.FC<activityHistoryInfo> = (props) => {
             <span className="font-toss text-[1.5rem]">{reviewEmoji}</span>
           </div>
         ) : (
-          <Pencil
-            className="cursor-pointer"
-            onClick={handleOnClick}
-            size={20}
-          />
+          <Link href={`/review?clothesId=${props.clothesId}`}>
+            <Pencil className="cursor-pointer" size={20} />
+          </Link>
         )}
       </div>
-
-      {isVisible && (
-        <>
-          <ReviewModal
-            clothesId={props.clothesId.toString()}
-            isVisible={isVisible}
-            closeModal={closeModal}
-          />
-        </>
-      )}
     </div>
   )
 }

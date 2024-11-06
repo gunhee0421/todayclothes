@@ -1,20 +1,12 @@
 'use client'
 
 import { RootState } from '@/redux/store'
-import {
-  Camera,
-  Circle,
-  ImageIcon,
-  X,
-  XCircle,
-  XCircleIcon,
-  XIcon,
-} from 'lucide-react'
+import { Camera, ImageIcon, XCircleIcon, XIcon } from 'lucide-react'
 import { useSelector } from 'react-redux'
 import { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useActivityReview } from '@/api/services/recommend/quries'
-import { ActivityReview, Feedback } from '@/api/services/recommend/model'
+import { Feedback } from '@/api/services/recommend/model'
 import { useQueryClient } from '@tanstack/react-query'
 import { useRouter, useSearchParams } from 'next/navigation'
 
@@ -320,7 +312,7 @@ const Review = () => {
                             className={`cursor-pointer ${camera ? 'text-zinc-500' : 'cursor-not-allowed text-zinc-300'}`}
                           />
                           {!camera && showText && (
-                            <div className="absolute -left-1 -top-8 z-10 w-[10rem] whitespace-normal break-words rounded bg-black px-2 py-1 text-xs text-white">
+                            <div className="absolute -left-1 -top-11 z-10 w-[10rem] whitespace-normal break-words rounded bg-black px-2 py-1 text-xs text-white">
                               카메라 접근 권한이 허용되지 않았습니다.
                             </div>
                           )}

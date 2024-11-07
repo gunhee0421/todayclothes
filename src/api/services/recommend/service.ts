@@ -1,7 +1,6 @@
 import { QueryClient } from '@tanstack/react-query'
 import {
   activityHistoryResponse,
-  ActivityReview,
   ActivityReviewResponse,
   ActivityWeatherInfo,
   ActivityWeatherResponse,
@@ -26,8 +25,9 @@ export const ActivityService = {
     access: string | null,
     refresh: string | null,
     dispatch: any,
+    path: string,
   ) {
-    return APIBuilder.get(`/event`)
+    return APIBuilder.get(path)
       .withCredentials(client, access, refresh, dispatch)
       .build()
       .call<activityHistoryResponse>()

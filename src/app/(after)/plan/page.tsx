@@ -170,18 +170,18 @@ const Plan: React.FC = () => {
     const { activityType, activityStyle, startTime } = data
     const now = dayjs()
 
-    console.log('Form Data:', data)
     weatherData.setWeatherData({
       location: {
         lat: data.placeCoordinates.lat || 0,
         lon: data.placeCoordinates.lon || 0,
       },
-      startTime: data.startTime?.format('YYYY-MM-DDTHH:mm') || '',
+      startTime: data.startTime?.format('YYYY-MM-DDTHH:mm:ss') || '',
       type: data.activityType,
       style: data.activityStyle,
+      timezone: data.timeOfDay as TimeOfDay,
+      gender: data.gender as Gender,
     })
     router.push('/recommend')
-    reset()
   }
 
   return (

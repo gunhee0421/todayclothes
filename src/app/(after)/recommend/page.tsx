@@ -8,9 +8,8 @@ import {
   useTodayWeatherQuery,
   WeatherResponse,
 } from '@/api'
-import { ActivityWeatherInfo } from '@/api/services/recommend/model'
+import { ActivityWeatherInfo, TimeOfDay } from '@/api/services/recommend/model'
 import { LoadingAvatar } from '@/components/Avatar/Avatar'
-import { getRecommendData } from '@/components/Date/getRecommendData'
 import Header from '@/components/Header/Header'
 import { ActivityWeather } from '@/components/Info/ActivityWeather'
 import NavigationBar from '@/components/NavigationBar/NavigationBar'
@@ -23,6 +22,7 @@ import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useQueryClient } from '@tanstack/react-query'
 import Image from 'next/image'
+import { getRecommendData } from '@/components/Date/getRecommendData'
 
 const Recommend = () => {
   const { isVisible, openModal, closeModal } = useModal()
@@ -32,6 +32,8 @@ const Recommend = () => {
   const { weatherData } = useWeatherContext()
   const [query, setQuery] = useState<ActivityWeatherInfo>()
   const queryClient = useQueryClient()
+
+  console.log(weatherData)
 
   // POST
   const { data: activityInfo, mutate: mutateActivityInfo } = useActivityInfo({
@@ -51,15 +53,19 @@ const Recommend = () => {
   // todayWeather 데이터로 시간에 따른 날씨 필터링
   useEffect(() => {
     if (todayWeather && weatherData?.location) {
-      const filteredWeather = getRecommendData(todayWeather, {
-        startTime: weatherData.startTime || '',
-        endTime: weatherData.endTime || '',
-      })
+      const filteredWeather = getRecommendData(
+        todayWeather,
+        weatherData.startTime || '',
+        weatherData.timezone as TimeOfDay,
+      )
+
+      console.log(filteredWeather)
 
       setQuery({
         location: todayWeather.city.name,
         startTime: weatherData.startTime || '',
-        endTime: weatherData.endTime || '',
+        timezone: weatherData.timezone,
+        gender: weatherData.gender,
         type: weatherData.type || ActivityType.Indoor,
         style: weatherData.style || ActivityStyle.Casual,
         weather: filteredWeather.tempCode,
@@ -73,7 +79,8 @@ const Recommend = () => {
       mutateActivityInfo({
         location: todayWeather.city.name,
         startTime: weatherData.startTime || '',
-        endTime: weatherData.endTime || '',
+        timezone: weatherData.timezone,
+        gender: weatherData.gender,
         type: weatherData.type || ActivityType.Indoor,
         style: weatherData.style || ActivityStyle.Casual,
         weather: filteredWeather.tempCode,
@@ -110,7 +117,7 @@ const Recommend = () => {
           <div>
             <Header />
           </div>
-          <div className="flex flex-1 flex-col justify-between">
+          <div className="flex flex-1 flex-col justify-between gap-6">
             <ActivityWeather
               todayWeather={query as ActivityWeatherInfo}
               type={weatherData?.type as ActivityType}
@@ -119,6 +126,8 @@ const Recommend = () => {
             <Image
               src={activityInfo?.result?.imgPath as ''}
               alt="추천 받은 옷 이미지"
+              width={500}
+              height={500}
               className="h-full w-full"
             />
             <p className="font-notosanko text-[20px] font-semibold text-gray-500">

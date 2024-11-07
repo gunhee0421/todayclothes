@@ -145,7 +145,14 @@ const Plan: React.FC = () => {
   }
 
   useEffect(() => {
-    getCurrentLocation()
+    const checkGoogleMapsLoaded = () => {
+      if (isGoogleMapsLoaded()) {
+        getCurrentLocation()
+      } else {
+        setTimeout(checkGoogleMapsLoaded, 500) // 500ms 후 다시 체크
+      }
+    }
+    checkGoogleMapsLoaded()
   }, [])
 
   const handlePlaceChange = async (newValue: Option | null) => {

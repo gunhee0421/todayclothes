@@ -38,9 +38,10 @@ export interface PlaceCoordinates {
 export interface ActivityWeatherInfo {
   location: string
   startTime: string
-  endTime: string
   type: ActivityType
   style: ActivityStyle
+  timezone: TimeOfDay
+  gender: Gender
   weather: number
   wind: number
   rain: number

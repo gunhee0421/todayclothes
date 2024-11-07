@@ -12,7 +12,9 @@ interface NavigationBarProps {
 const NavigationBar: React.FC<NavigationBarProps> = ({ color, openModal }) => {
   const router = useRouter()
 
-  const handleSearchClick = () => {}
+  const handleSearchClick = () => {
+    router.push('/feed')
+  }
 
   const handlePlusClick = () => {
     router.push('/plan')

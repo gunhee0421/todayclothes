@@ -1,4 +1,4 @@
-import { SetStateAction, useMemo } from 'react'
+import { SetStateAction, useMemo, useRef } from 'react'
 import { weatherSegments } from '../Date/getRecommendData'
 import { useDispatch } from 'react-redux'
 import { BackGroundWeather, WeatherSave } from '../Info/Weather'
@@ -18,46 +18,32 @@ import Image from 'next/image'
 export const HistoryAvatarCarousel: React.FC<{
   data: activityHistoryInfo
 }> = ({ data }) => {
-  const dispatch = useDispatch()
+  const imageArray = [data.imgPath, ...data.myImgPaths].filter(Boolean)
 
   const settings = {
     dots: true,
-    infinite: true,
+    infinite: imageArray.length > 1,
     arrows: false,
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
+    afterChange: (index: number) => {
+      // 슬라이드 이동 후 포커스를 현재 활성 슬라이드에만 유지
+      const slides = document.querySelectorAll('.slick-slide')
+      slides.forEach((slide, i) => {
+        slide.setAttribute('aria-hidden', i !== index ? 'true' : 'false')
+        slide.toggleAttribute('inert', i !== index)
+      })
+    },
   }
-
-  const getImageArray = (temp: string) => {
-    if (temp == null) return so_hotImage
-    switch (temp) {
-      case 'fresh':
-        return freshImage
-      case 'cloud':
-        return cloudImage
-      case 'so_hot':
-        return so_hotImage
-      case 'hot':
-        return hotImage
-      case 'cold':
-        return coldImage
-      case 'so_cold':
-        return so_coldImage
-      default:
-        return []
-    }
-  }
-
-  const ImageArray = ['', '', '', '']
 
   return (
     <Slider {...settings}>
-      {ImageArray.map((item) => (
-        <div className="flex h-[50vh] flex-col items-center justify-center">
+      {imageArray.map((imgSrc, index) => (
+        <div key={index} className="flex h-[50vh] items-center justify-center">
           <Image
-            src={item}
-            alt="캐릭터 아바타"
+            src={imgSrc || ''}
+            alt={`Image ${index + 1}`}
             height={150}
             width={50}
             className="h-full w-full"

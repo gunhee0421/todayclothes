@@ -194,7 +194,7 @@ const Plan: React.FC = () => {
   return (
     <div className="flex min-h-screen items-center justify-center bg-white">
       <div className="w-[600px] rounded-[16px] p-[32px]">
-        <h2 className="mb-[36px] text-center font-notosanko text-[20px] font-semibold leading-normal tracking-[-0.1px]">
+        <h2 className="mb-[24px] text-center font-notosanko text-[20px] font-semibold leading-normal tracking-[-0.1px]">
           {language === 'ko'
             ? '오늘의 주요 일정을 입력해주세요.'
             : 'What are your main plans for today?'}
@@ -206,7 +206,7 @@ const Plan: React.FC = () => {
             <label className="font-notosanko text-[12px] font-medium leading-normal text-zinc-400">
               {language === 'ko' ? '활동 장소' : 'Activity Location'}
             </label>
-            <div className="w-[536px] pb-[40px] pt-[8px]">
+            <div className="w-[536px] pb-[36px] pt-[8px]">
               <Controller
                 name="selectedPlace"
                 control={control}
@@ -243,9 +243,9 @@ const Plan: React.FC = () => {
 
           {/* Activity Time */}
           <label className="w-full font-notosanko text-[12px] font-medium leading-normal text-zinc-400">
-            {language === 'ko' ? '활동 시간' : 'Activity Time'}
+            {language === 'ko' ? '활동 날짜' : 'Activity Time'}
           </label>
-          <div className="flex pb-[40px] pt-[8px]">
+          <div className="flex pb-[36px] pt-[8px]">
             <Controller
               name="startTime"
               control={control}
@@ -280,7 +280,7 @@ const Plan: React.FC = () => {
               name="timeOfDay"
               control={control}
               render={({ field }) => (
-                <div className="grid grid-cols-2 gap-[8px] pb-[40px] pt-[8px]">
+                <div className="grid grid-cols-2 gap-[8px] pb-[36px] pt-[8px]">
                   {[
                     TimeOfDay.Morning,
                     TimeOfDay.Afternoon,
@@ -357,7 +357,7 @@ const Plan: React.FC = () => {
               name="activityType"
               control={control}
               render={({ field }) => (
-                <div className="flex gap-[16px] pb-[40px] pt-[8px]">
+                <div className="flex gap-[16px] pb-[36px] pt-[8px]">
                   <button
                     type="button"
                     onClick={() => field.onChange(ActivityType.Indoor)}
@@ -393,7 +393,7 @@ const Plan: React.FC = () => {
               name="activityStyle"
               control={control}
               render={({ field }) => (
-                <div className="mb-[36px] grid grid-cols-2 gap-[8px] gap-x-[16px] pt-[8px]">
+                <div className="mb-[24px] grid grid-cols-2 gap-[8px] gap-x-[16px] pt-[8px]">
                   {activityStyles.map((style) => (
                     <button
                       key={style}

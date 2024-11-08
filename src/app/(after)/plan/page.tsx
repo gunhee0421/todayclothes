@@ -193,7 +193,7 @@ const Plan: React.FC = () => {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-white">
-      <div className="w-[600px] rounded-[16px] p-[32px]">
+      <div className="w-full max-w-[600px] overflow-y-auto rounded-[16px] bg-white px-4 py-8 sm:p-8">
         <h2 className="mb-[24px] text-center font-notosanko text-[20px] font-semibold leading-normal tracking-[-0.1px]">
           {language === 'ko'
             ? '오늘의 주요 일정을 입력해주세요.'
@@ -206,7 +206,7 @@ const Plan: React.FC = () => {
             <label className="font-notosanko text-[12px] font-medium leading-normal text-zinc-400">
               {language === 'ko' ? '활동 장소' : 'Activity Location'}
             </label>
-            <div className="w-[536px] pb-[36px] pt-[8px]">
+            <div className="w-full pb-[36px] pt-[8px]">
               <Controller
                 name="selectedPlace"
                 control={control}

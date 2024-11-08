@@ -9,10 +9,10 @@ export enum Gender {
 }
 
 export enum TimeOfDay {
-  Morning = 'Morning',
-  Afternoon = 'Afternoon',
-  Evening = 'Evening',
-  Night = 'Night',
+  Morning = 'MORNING',
+  Afternoon = 'AFTERNOON',
+  Evening = 'EVENING',
+  Night = 'NIGHT',
 }
 
 export enum ActivityStyle {
@@ -38,7 +38,8 @@ export interface PlaceCoordinates {
 export interface ActivityWeatherInfo {
   location: string
   startTime: string
-  endTime: string
+  timezone: TimeOfDay
+  gender: Gender
   type: ActivityType
   style: ActivityStyle
   weather: number
@@ -53,7 +54,9 @@ export interface activityHistoryInfo {
   clothesId: number
   imgPath: string | null
   myImgPaths: string[]
+  timezone: TimeOfDay
   location: string
+  gender: Gender
   type: ActivityType
   style: ActivityStyle
   review: WeatherReview | null
@@ -76,7 +79,9 @@ export interface ActivityWeatherResponse {
   message: string
   result: {
     location: string
+    timezone: TimeOfDay
     imgPath: string
+    gender: Gender
     comment: string
     type: ActivityType
     style: ActivityStyle

@@ -23,8 +23,8 @@ export const HistoryAvatarCarousel: React.FC<{
           <Image
             src={imgSrc || ''}
             alt={`Image ${index + 1}`}
-            height={150}
-            width={50}
+            height={500}
+            width={500}
             className="h-full w-full"
           />
         </div>

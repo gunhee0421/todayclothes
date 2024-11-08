@@ -25,7 +25,6 @@ export function getRecommendData(
     | TimeOfDay.Evening
     | TimeOfDay.Night,
 ) {
-  // 시간대에 맞는 시작 시간과 끝 시간 정의 (한국 시간 기준, UTC+9)
   const timeRanges: Record<string, [number, number]> = {
     MORNING: [6, 12],
     AFTERNOON: [12, 18],
@@ -35,17 +34,16 @@ export function getRecommendData(
 
   const [startHour, endHour] = timeRanges[timeRange]
 
-  // startTime에서 날짜를 추출하고, 시간을 무시하여 한국 시간(KST) 기준으로 처리
   const startDate = new Date(startTime) // ISO 8601 문자열을 Date 객체로 변환
   const startDay = startDate.getDate() // 날짜만 추출 (시간은 무시)
 
   const filteredData = todayWeather.list.filter((data) => {
-    // 데이터의 시간을 한국 시간(KST)으로 변환 (UNIX timestamp -> KST)
-    const dataDateKST = new Date((data.dt + 9 * 60 * 60) * 1000) // UTC에서 KST로 변환
+    const dataToDate = new Date(data.dt_txt)
+    const dataDateKST = new Date(dataToDate.getTime() + 9 * 60 * 60 * 1000)
+
     const hour = dataDateKST.getHours() // 한국 시간 기준의 시간
     const day = dataDateKST.getDate() // 해당 날짜가 startTime의 날짜와 일치하는지 확인
 
-    // 해당 데이터가 startTime의 날짜와 일치하고, 해당 시간대에 포함되는지 체크
     return day === startDay && hour >= startHour && hour < endHour
   })
 

@@ -61,6 +61,8 @@ const Plan: React.FC = () => {
     return selectableDates.some((d) => d.isSame(date, 'day'))
   }
 
+  const nextTime = new Date().getHours() + 1
+
   const { control, handleSubmit, setValue, reset, watch } = useForm<FormValues>(
     {
       defaultValues: {
@@ -70,7 +72,14 @@ const Plan: React.FC = () => {
         selectedPlace: null,
         placeCoordinates: { lat: null, lon: null },
         gender: Gender.Female, // 기본값: 여성
-        timeOfDay: TimeOfDay.Morning, // 기본값: 아침
+        timeOfDay:
+          nextTime < 6
+            ? TimeOfDay.Night
+            : nextTime < 12
+              ? TimeOfDay.Morning
+              : nextTime < 18
+                ? TimeOfDay.Afternoon
+                : TimeOfDay.Evening,
       },
     },
   )
@@ -272,37 +281,60 @@ const Plan: React.FC = () => {
             <Controller
               name="timeOfDay"
               control={control}
-              render={({ field }) => (
-                <div className="grid grid-cols-2 gap-[8px] pb-[40px] pt-[8px]">
-                  {[
-                    TimeOfDay.Morning,
-                    TimeOfDay.Afternoon,
-                    TimeOfDay.Evening,
-                    TimeOfDay.Night,
-                  ].map((time) => (
-                    <button
-                      key={time}
-                      type="button"
-                      onClick={() => field.onChange(time)}
-                      className={`rounded-[16px] px-2 py-4 font-notosanko font-medium ${
-                        field.value === time
-                          ? 'bg-red-100 text-red-600'
-                          : 'bg-gray-100 text-gray-600'
-                      }`}
-                    >
-                      {language === 'ko'
-                        ? time === TimeOfDay.Morning
-                          ? '아침'
-                          : time === TimeOfDay.Afternoon
-                            ? '낮'
-                            : time === TimeOfDay.Evening
-                              ? '저녁'
-                              : '밤'
-                        : time}
-                    </button>
-                  ))}
-                </div>
-              )}
+              render={({ field }) => {
+                let currentHour = 0
+
+                if (watch('startTime')?.isSame(dayjs(), 'day')) {
+                  currentHour = dayjs().hour() + 1
+                }
+
+                return (
+                  <div className="grid grid-cols-2 gap-[8px] pb-[40px] pt-[8px]">
+                    {[
+                      TimeOfDay.Night,
+                      TimeOfDay.Morning,
+                      TimeOfDay.Afternoon,
+                      TimeOfDay.Evening,
+                    ].map((time) => {
+                      const timeMap = {
+                        [TimeOfDay.Night]: 6,
+                        [TimeOfDay.Morning]: 12,
+                        [TimeOfDay.Afternoon]: 18,
+                        [TimeOfDay.Evening]: 24,
+                      }
+                      const isDisabled = timeMap[time] < currentHour
+
+                      const displayTime =
+                        time.charAt(0).toUpperCase() +
+                        time.slice(1).toLowerCase()
+
+                      return (
+                        <button
+                          key={time}
+                          type="button"
+                          onClick={() => field.onChange(time)}
+                          className={`rounded-[16px] px-2 py-4 font-notosanko font-medium ${
+                            field.value === time
+                              ? 'bg-red-100 text-red-600'
+                              : 'bg-gray-100 text-gray-600'
+                          } ${isDisabled ? 'opacity-50' : ''}`}
+                          disabled={isDisabled}
+                        >
+                          {language === 'ko'
+                            ? time === TimeOfDay.Morning
+                              ? '아침'
+                              : time === TimeOfDay.Afternoon
+                                ? '낮'
+                                : time === TimeOfDay.Evening
+                                  ? '저녁'
+                                  : '새벽'
+                            : displayTime}
+                        </button>
+                      )
+                    })}
+                  </div>
+                )
+              }}
             />
           </div>
 

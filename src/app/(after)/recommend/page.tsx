@@ -49,6 +49,7 @@ const Recommend = () => {
       enabled: !!weatherData?.location,
       retry: 3,
     },
+    96,
   )
   // todayWeather 데이터로 시간에 따른 날씨 필터링
   useEffect(() => {

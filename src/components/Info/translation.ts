@@ -30,7 +30,7 @@ const ActivityStyleTranslation: Record<
     [ActivityStyle.Outdoor]: 'Outdoor',
   },
   ko: {
-    [ActivityStyle.Business]: '비지니스',
+    [ActivityStyle.Business]: '비즈니스',
     [ActivityStyle.Formal]: '격식있는',
     [ActivityStyle.Street]: '스트릿',
     [ActivityStyle.Casual]: '캐주얼',

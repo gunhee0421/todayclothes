@@ -69,10 +69,10 @@ export const activityOptions = {
         dispatch,
         `/event/all?page=${pageParam}&size=${size}`,
       ),
-    getNextPageParam: (lastPage: any) => {
-      // 다음 페이지가 존재하는 경우에만 증가
+    getNextPageParam: (lastPage: any, allPages: any[]) => {
+      // 결과 배열이 `size`와 같은 경우에만 다음 페이지 요청
       return lastPage.result && lastPage.result.length === size
-        ? lastPage.page + 1
+        ? allPages.length // 다음 pageParam을 현재 페이지 수로 설정
         : undefined
     },
     initialPageParam: 0,

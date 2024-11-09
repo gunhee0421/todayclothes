@@ -12,14 +12,13 @@ import 'dayjs/locale/en'
 import GooglePlacesAutocomplete, {
   geocodeByPlaceId,
 } from 'react-google-places-autocomplete'
-import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useRouter } from 'next/navigation'
 import { useWeatherContext } from '@/providers/WeatherProvider'
 import { ActivityStyle, ActivityType } from '@/api'
 import { translateActivityStyle } from '@/components/Info/translation'
 import { DatePicker } from '@mui/x-date-pickers'
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { geocodeByLatLng } from 'react-google-places-autocomplete'
 import {
   Gender,
@@ -202,26 +201,30 @@ const Plan: React.FC = () => {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-white">
-      <div className="w-full max-w-[600px] overflow-y-auto rounded-[16px] bg-white px-4 py-4 sm:py-8">
-        <h2 className="mb-[12px] text-center font-notosanko text-[20px] font-semibold leading-normal tracking-[-0.1px] sm:mb-[24px]">
+      <div className="flex w-full max-w-[600px] flex-col gap-[1rem] overflow-y-auto rounded-[16px] bg-white p-[2rem] sm:gap-[1.5rem]">
+        <h2 className="text-center font-notosanko text-[18px] font-semibold leading-normal tracking-[-0.1px] sm:text-[20px]">
           {language === 'ko'
             ? '오늘의 주요 일정을 입력해주세요.'
             : 'What are your main plans for today?'}
         </h2>
 
-        <form onSubmit={handleSubmit(handleLog)}>
+        <form
+          onSubmit={handleSubmit(handleLog)}
+          className="flex flex-1 flex-col gap-[1rem] sm:gap-[2.25rem]"
+        >
           {/* Activity Location */}
-          <div>
+          <div className="flex flex-col gap-[0.5rem]">
             <label className="font-notosanko text-[12px] font-medium leading-normal text-zinc-400">
               {language === 'ko' ? '활동 장소' : 'Activity Location'}
             </label>
-            <div className="w-full pb-[18px] pt-[8px] sm:pb-[36px]">
+            <div className="w-full">
               <Controller
                 name="selectedPlace"
                 control={control}
                 render={({ field }) => (
                   <GooglePlacesAutocomplete
                     selectProps={{
+                      className: 'sm:text-[1rem] text-[0.9rem] font-medium',
                       value: field.value,
                       onChange: handlePlaceChange,
                       placeholder:
@@ -231,11 +234,13 @@ const Plan: React.FC = () => {
                       styles: {
                         control: (provided) => ({
                           ...provided,
-                          height: '3rem',
+                          height: '3.5rem',
                           backgroundColor: 'rgb(241 241 244)',
                           border: '0px solid',
                           borderRadius: '8px',
                           color: '#3C4350',
+                          fontFamily: 'NotoSansKR',
+                          paddingInline: '1rem',
                         }),
                         input: (provided) => ({
                           ...provided,
@@ -251,10 +256,11 @@ const Plan: React.FC = () => {
           </div>
 
           {/* Activity Time */}
-          <label className="w-full font-notosanko text-[12px] font-medium leading-normal text-zinc-400">
-            {language === 'ko' ? '활동 날짜' : 'Activity Time'}
-          </label>
-          <div className="flex pb-[18px] pt-[8px] sm:pb-[36px]">
+          <div className="flex flex-col gap-[0.5rem]">
+            <label className="w-full font-notosanko text-[12px] font-medium leading-normal text-zinc-400">
+              {language === 'ko' ? '활동 날짜' : 'Activity Time'}
+            </label>
+
             <Controller
               name="startTime"
               control={control}
@@ -271,6 +277,7 @@ const Plan: React.FC = () => {
                     sx={{
                       backgroundColor: 'rgb(241, 241, 244)',
                       border: 'none',
+                      color: '#3C4350',
                       borderRadius: '8px',
                       width: '100%',
                     }}
@@ -279,9 +286,8 @@ const Plan: React.FC = () => {
               )}
             />
           </div>
-
           {/* Time of Day */}
-          <div>
+          <div className="flex flex-col gap-[0.5rem]">
             <label className="font-notosanko text-[12px] font-medium leading-normal text-zinc-400">
               {language === 'ko' ? '활동 시간대' : 'Time of Day'}
             </label>
@@ -296,7 +302,7 @@ const Plan: React.FC = () => {
                 }
 
                 return (
-                  <div className="grid grid-cols-2 gap-[8px] pb-[40px] pt-[8px] sm:pb-[36px]">
+                  <div className="grid grid-cols-2 gap-[8px]">
                     {[
                       TimeOfDay.Night,
                       TimeOfDay.Morning,
@@ -320,7 +326,7 @@ const Plan: React.FC = () => {
                           key={time}
                           type="button"
                           onClick={() => field.onChange(time)}
-                          className={`rounded-[16px] px-2 py-4 font-notosanko font-medium sm:py-4 ${
+                          className={`rounded-[16px] py-4 font-notosanko text-[0.9rem] font-medium sm:text-[1rem] ${
                             field.value === time
                               ? 'bg-red-100 text-red-600'
                               : 'bg-gray-100 text-gray-600'
@@ -345,7 +351,7 @@ const Plan: React.FC = () => {
             />
           </div>
 
-          <div>
+          <div className="flex flex-col gap-[0.5rem]">
             <label className="font-notosanko text-[12px] font-medium leading-normal text-zinc-400">
               {language === 'ko' ? '성별' : 'Gender'}
             </label>
@@ -353,11 +359,11 @@ const Plan: React.FC = () => {
               name="gender"
               control={control}
               render={({ field }) => (
-                <div className="flex gap-[16px] pb-[20px] pt-[8px] sm:pb-[40px]">
+                <div className="flex gap-[16px]">
                   <button
                     type="button"
                     onClick={() => field.onChange(Gender.Female)}
-                    className={`flex-1 rounded-[16px] px-2 py-2 font-notosanko font-medium sm:py-4 ${
+                    className={`flex-1 rounded-[16px] px-2 py-4 font-notosanko text-[0.9rem] font-medium sm:text-[1rem] ${
                       field.value === Gender.Female
                         ? 'bg-red-100 text-red-600'
                         : 'bg-gray-100 text-gray-600'
@@ -368,7 +374,7 @@ const Plan: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => field.onChange(Gender.Male)}
-                    className={`flex-1 rounded-[16px] px-2 py-2 font-notosanko font-medium sm:py-4 ${
+                    className={`flex-1 rounded-[16px] px-2 py-4 font-notosanko font-medium sm:py-4 ${
                       field.value === Gender.Male
                         ? 'bg-red-100 text-red-600'
                         : 'bg-gray-100 text-gray-600'
@@ -381,7 +387,7 @@ const Plan: React.FC = () => {
             />
           </div>
 
-          <div>
+          <div className="flex flex-col gap-[0.5rem]">
             <label className="font-notosanko text-[12px] font-medium leading-normal text-zinc-400">
               {language === 'ko' ? '활동 종류' : 'Activity Type'}
             </label>
@@ -389,11 +395,11 @@ const Plan: React.FC = () => {
               name="activityType"
               control={control}
               render={({ field }) => (
-                <div className="flex gap-[16px] pb-[18px] pt-[8px] sm:pb-[36px]">
+                <div className="flex gap-[16px]">
                   <button
                     type="button"
                     onClick={() => field.onChange(ActivityType.Indoor)}
-                    className={`flex-1 rounded-[16px] px-2 py-2 font-notosanko font-medium sm:py-4 ${
+                    className={`flex-1 rounded-[16px] px-2 py-4 font-notosanko text-[0.9rem] font-medium sm:text-[1rem] ${
                       field.value === ActivityType.Indoor
                         ? 'bg-red-100 text-red-600'
                         : 'bg-gray-100 text-gray-600'
@@ -404,7 +410,7 @@ const Plan: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => field.onChange(ActivityType.Outdoor)}
-                    className={`flex-1 rounded-[16px] px-2 py-2 font-notosanko font-medium sm:py-4 ${
+                    className={`flex-1 rounded-[16px] px-2 py-4 font-notosanko text-[0.9rem] font-medium sm:text-[1rem] ${
                       field.value === ActivityType.Outdoor
                         ? 'bg-red-100 text-red-600'
                         : 'bg-gray-100 text-gray-600'
@@ -417,7 +423,7 @@ const Plan: React.FC = () => {
             />
           </div>
 
-          <div>
+          <div className="flex flex-col gap-[0.5rem]">
             <label className="font-notosanko text-[12px] font-medium leading-normal text-zinc-400">
               {language === 'ko' ? '활동 분위기' : 'Activity Style'}
             </label>
@@ -425,13 +431,13 @@ const Plan: React.FC = () => {
               name="activityStyle"
               control={control}
               render={({ field }) => (
-                <div className="mb-[12px] grid grid-cols-2 gap-[8px] gap-x-[16px] pt-[8px] sm:mb-[24px]">
+                <div className="grid grid-cols-2 gap-[8px] gap-x-[16px]">
                   {activityStyles.map((style) => (
                     <button
                       key={style}
                       type="button"
                       onClick={() => field.onChange(style)}
-                      className={`rounded-[16px] px-2 py-2 font-notosanko font-medium sm:py-4 ${
+                      className={`rounded-[16px] px-2 py-4 font-notosanko text-[0.9rem] font-medium sm:text-[1rem] ${
                         field.value === style
                           ? 'bg-red-100 text-red-600'
                           : 'bg-gray-100 text-gray-600'
@@ -446,17 +452,17 @@ const Plan: React.FC = () => {
           </div>
 
           {/* Buttons */}
-          <div className="flex gap-[12px]">
+          <div className="flex gap-[12px] pt-2">
             <button
               type="button"
               onClick={() => router.push('/home')}
-              className="flex-1 rounded-[8px] bg-red-100 py-1 font-notosanko text-red-600 sm:py-2"
+              className="flex-1 rounded-[8px] bg-red-100 py-2 font-notosanko text-[0.9rem] text-red-600 sm:text-[1rem]"
             >
               {language === 'ko' ? '취소' : 'Cancel'}
             </button>
             <button
               type="submit"
-              className={`flex-1 rounded-[8px] py-1 font-notosanko text-white sm:py-2 ${
+              className={`flex-1 rounded-[8px] py-2 font-notosanko text-[0.9rem] text-white sm:text-[1rem] ${
                 !isFormValid ? 'bg-gray-300' : 'bg-red-500'
               }`}
               disabled={!isFormValid}
@@ -465,9 +471,6 @@ const Plan: React.FC = () => {
             </button>
           </div>
         </form>
-
-        {/* Toast container for notifications */}
-        <ToastContainer />
       </div>
     </div>
   )

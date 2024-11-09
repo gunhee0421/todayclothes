@@ -1,7 +1,7 @@
 import {
   MutationOptions,
   QueryClient,
-  QueryOptions,
+  useInfiniteQuery,
   useMutation,
   useQuery,
   useQueryClient,
@@ -9,7 +9,6 @@ import {
 import { ActivityService } from './service'
 import {
   activityHistoryResponse,
-  ActivityReview,
   ActivityReviewResponse,
   ActivityWeatherInfo,
   ActivityWeatherResponse,
@@ -33,10 +32,11 @@ export const activityOptions = {
     access: string | null,
     refresh: string | null,
     dispatch: any,
+    path: string, // path 인수 추가
   ) => ({
-    queryKey: ['activityHistory'],
+    queryKey: ['activityHistory'], // path를 queryKey에 포함하여 캐시를 분리
     queryFn: () =>
-      ActivityService.activityHistory(client, access, refresh, dispatch),
+      ActivityService.activityHistory(client, access, refresh, dispatch, path),
   }),
   activityReview: (
     client: QueryClient,
@@ -45,7 +45,37 @@ export const activityOptions = {
     dispatch: any,
   ) => ({
     mutationFn: (formData: FormData) =>
-      ActivityService.activityReview(client, access, refresh, dispatch, formData),
+      ActivityService.activityReview(
+        client,
+        access,
+        refresh,
+        dispatch,
+        formData,
+      ),
+  }),
+  activityFeed: (
+    client: QueryClient,
+    access: string | null,
+    refresh: string | null,
+    dispatch: any,
+    size: number,
+  ) => ({
+    queryKey: ['activityFeed'],
+    queryFn: ({ pageParam = 0 }) =>
+      ActivityService.activityHistory(
+        client,
+        access,
+        refresh,
+        dispatch,
+        `/event/all?page=${pageParam}&size=${size}`,
+      ),
+    getNextPageParam: (lastPage: any, allPages: any[]) => {
+      // 결과 배열이 `size`와 같은 경우에만 다음 페이지 요청
+      return lastPage.result && lastPage.result.length === size
+        ? allPages.length // 다음 pageParam을 현재 페이지 수로 설정
+        : undefined
+    },
+    initialPageParam: 0,
   }),
 }
 
@@ -73,10 +103,10 @@ export const useActivityInfo = (
   })
 }
 export const useActivityHistory = (
+  path: string, // path 인수 추가
   options: CustomQueryOptions<activityHistoryResponse> = {},
 ) => {
   const queryClient = useQueryClient()
-
   const access = useSelector((state: RootState) => state.login.accessToken)
   const refresh = useSelector((state: RootState) => state.login.refreshToken)
   const dispatch = useDispatch()
@@ -87,10 +117,12 @@ export const useActivityHistory = (
       access,
       refresh,
       dispatch,
+      path, // path 전달
     ),
     ...options,
   })
 }
+
 export const useActivityReview = (
   options: MutationOptions<ActivityReviewResponse, Error, FormData> = {},
 ) => {
@@ -104,4 +136,24 @@ export const useActivityReview = (
     ...activityOptions.activityReview(queryClient, access, refresh, dispatch),
     ...options,
   })
+}
+
+export const useActivityFeed = (
+  options: CustomQueryOptions<activityHistoryResponse> = {},
+  size: 5,
+) => {
+  const queryClient = useQueryClient()
+  const access = useSelector((state: RootState) => state.login.accessToken)
+  const refresh = useSelector((state: RootState) => state.login.refreshToken)
+  const dispatch = useDispatch()
+
+  const queryOptions = activityOptions.activityFeed(
+    queryClient,
+    access,
+    refresh,
+    dispatch,
+    size,
+  )
+
+  return useInfiniteQuery(queryOptions) // queryOptions를 직접 전달
 }

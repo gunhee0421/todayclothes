@@ -9,8 +9,9 @@ export const WeatherService = {
   async weatherInfo(
     client: QueryClient,
     coordinate: coordinate,
+    day: number,
   ): Promise<WeatherResponse> {
-    const url = `https://pro.openweathermap.org/data/2.5/forecast/hourly?lat=${coordinate.lat}&lon=${coordinate.lon}&appid=${WEATHER_API_KEY}&units=metric&cnt=24`
+    const url = `https://pro.openweathermap.org/data/2.5/forecast/hourly?lat=${coordinate.lat}&lon=${coordinate.lon}&appid=${WEATHER_API_KEY}&units=metric&cnt=${day}`
 
     try {
       const response = await axios.get<WeatherResponse>(url)

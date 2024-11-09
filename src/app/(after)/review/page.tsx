@@ -184,7 +184,6 @@ const Review = () => {
           console.log('Success:', formData)
           queryClient.invalidateQueries({ queryKey: ['activityHistory'] })
           router.push('/history')
-          reset()
         },
       })
     } catch (error) {

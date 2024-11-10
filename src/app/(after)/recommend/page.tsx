@@ -52,14 +52,14 @@ const Recommend = () => {
   )
   // todayWeather 데이터로 시간에 따른 날씨 필터링
   useEffect(() => {
-    if (todayWeather && weatherData?.location) {
+    if (todayWeather && weatherData?.location && city) {
       const filteredWeather = getRecommendData(
         todayWeather,
         weatherData.startTime || '',
         weatherData.timezone as TimeOfDay,
       )
       setQuery({
-        location: city as string,
+        location: city,
         startTime: weatherData.startTime || '',
         timezone: weatherData.timezone,
         gender: weatherData.gender,
@@ -74,7 +74,7 @@ const Recommend = () => {
       })
 
       mutateActivityInfo({
-        location: city as string,
+        location: city,
         startTime: weatherData.startTime || '',
         timezone: weatherData.timezone,
         gender: weatherData.gender,
@@ -117,7 +117,6 @@ const Recommend = () => {
           const cityName = data.plus_code.compound_code.split(' ')
 
           setCity(cityName[cityName.length - 1])
-          console.log(data, cityName)
         }
       } catch (error) {
         console.log(error)
@@ -128,14 +127,14 @@ const Recommend = () => {
 
   return (
     <>
-      {!loading ? (
+      {!loading && todayWeather && query ? (
         <div className="flex min-h-screen flex-col gap-9 bg-white p-9">
           <div>
             <Header />
           </div>
           <div className="flex flex-1 flex-col justify-between gap-6">
             <ActivityWeather
-              todayWeather={query as ActivityWeatherInfo}
+              todayWeather={query}
               type={weatherData?.type as ActivityType}
               style={weatherData?.style as ActivityStyle}
             />

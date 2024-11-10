@@ -57,8 +57,10 @@ export const TodayWeatherInfo: React.FC<{
 
   // 날씨 정보 호출 후, 언어 번역
   useEffect(() => {
-    translate(city, 'en')
-  }, [])
+    if (city !== null) {
+      translate(city, 'en')
+    }
+  }, [city])
 
   return (
     <div className="flex h-[97px] w-full max-w-lg content-center items-start self-stretch">
@@ -123,7 +125,7 @@ export const HistoryWeatherInfo: React.FC<activityHistoryInfo> = (props) => {
 
   useEffect(() => {
     if (props.location && language == 'ko') {
-      translate(props.location, language)
+      translate(props.location, 'en')
     }
   }, [props, language])
 
@@ -132,7 +134,7 @@ export const HistoryWeatherInfo: React.FC<activityHistoryInfo> = (props) => {
       <div className="flex w-full flex-row justify-between font-notosanko">
         <div className="flex flex-col gap-[0.5rem]">
           <h1 className="font-notosanko text-[1.5rem] font-medium sm:text-weatherTitle">
-            {language === 'ko' && translatedText
+            {language !== 'ko' && translatedText
               ? translatedText[0]?.translations[0]?.text
               : props.location}
           </h1>

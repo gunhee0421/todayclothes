@@ -10,7 +10,7 @@ import NavigationBar from '@/components/NavigationBar/NavigationBar'
 import PlansModal from '@/components/Modal/PlansModal'
 import { useModal } from '@/hooks/useModal/useModal'
 import { RootState } from '@/redux/store'
-import { useEffect, useState } from 'react'
+import { lazy, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   getRecommendData,
@@ -18,6 +18,7 @@ import {
   weatherSegments,
 } from '@/components/Date/getRecommendData'
 import { HomeAvatarCarousel } from '@/components/Carousel/HomeCarousel'
+import { useTranslate } from '@/hooks/useTranslate/useTranslate'
 
 const HomePage = () => {
   const { isVisible, openModal, closeModal } = useModal()
@@ -65,13 +66,10 @@ const HomePage = () => {
   useEffect(() => {
     if (weatherSegments[currentTemp]) {
       WeatherSave(weatherSegments[currentTemp], dispatch)
-      const timer = setTimeout(() => {
-        setLoading(false)
-      }, 2000)
-      return () => clearTimeout(timer)
+      setLoading(false)
     }
   }, [weatherSegments])
-
+  // 지역명 구글맵 API로 호출
   useEffect(() => {
     const Location = async () => {
       try {
@@ -90,7 +88,7 @@ const HomePage = () => {
     }
     Location()
   }, [geolocation])
-
+  // 날씨 api데이터 -> 시간대별 데이터로 가공
   useEffect(() => {
     if (todayWeather) {
       setWeatherSegments(getTimeData(todayWeather))

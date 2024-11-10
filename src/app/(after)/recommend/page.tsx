@@ -31,9 +31,8 @@ const Recommend = () => {
   const { translate, translatedText } = useTranslate()
   const { weatherData } = useWeatherContext()
   const [query, setQuery] = useState<ActivityWeatherInfo>()
+  const [city, setCity] = useState<string | null>(null)
   const queryClient = useQueryClient()
-
-  console.log(weatherData)
 
   // POST
   const { data: activityInfo, mutate: mutateActivityInfo } = useActivityInfo({
@@ -42,7 +41,7 @@ const Recommend = () => {
       queryClient.invalidateQueries({ queryKey: ['activityHistory'] })
     },
   })
-
+  // 4일간의 특정 위치의 날씨 호출
   const { data: todayWeather } = useTodayWeatherQuery(
     weatherData?.location as coordinate,
     {
@@ -59,11 +58,8 @@ const Recommend = () => {
         weatherData.startTime || '',
         weatherData.timezone as TimeOfDay,
       )
-
-      console.log(filteredWeather)
-
       setQuery({
-        location: todayWeather.city.name,
+        location: city as string,
         startTime: weatherData.startTime || '',
         timezone: weatherData.timezone,
         gender: weatherData.gender,
@@ -78,7 +74,7 @@ const Recommend = () => {
       })
 
       mutateActivityInfo({
-        location: todayWeather.city.name,
+        location: city as string,
         startTime: weatherData.startTime || '',
         timezone: weatherData.timezone,
         gender: weatherData.gender,
@@ -100,16 +96,35 @@ const Recommend = () => {
       translate(activityInfo.result.comment, language)
     }
   }, [activityInfo?.result?.comment, language])
-
-  // todayWeather 로딩 상태 관리
+  // 로딩 화면 2초 지연
   useEffect(() => {
     if (todayWeather) {
       const timer = setTimeout(() => {
         setLoading(false)
-      }, 3000)
+      }, 2000)
       return () => clearTimeout(timer)
     }
   }, [todayWeather])
+  // 지역명 구글맵 API로 호출
+  useEffect(() => {
+    const Location = async () => {
+      try {
+        if (weatherData?.location) {
+          const response = await fetch(
+            `https://maps.googleapis.com/maps/api/geocode/json?latlng=${weatherData.location.lat},${weatherData.location.lon}&key=${process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY}`,
+          )
+          const data = await response.json()
+          const cityName = data.plus_code.compound_code.split(' ')
+
+          setCity(cityName[cityName.length - 1])
+          console.log(data, cityName)
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    Location()
+  }, [weatherData?.location])
 
   return (
     <>

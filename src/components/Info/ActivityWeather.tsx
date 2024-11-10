@@ -26,7 +26,7 @@ export const ActivityWeather: React.FC<{
   )
 
   useEffect(() => {
-    if (todayWeather.location && language === 'ko') {
+    if (todayWeather.location && language === 'en') {
       translate(todayWeather.location, language)
     }
   }, [todayWeather.location, language])
@@ -36,7 +36,7 @@ export const ActivityWeather: React.FC<{
       <div className="flex w-full flex-row justify-between">
         <div className="flex flex-col gap-[0.5rem]">
           <h1 className="font-notosanko text-[1.5rem] font-medium sm:text-weatherTitle">
-            {language === 'ko' && translatedText
+            {language !== 'ko' && translatedText
               ? translatedText[0]?.translations[0]?.text
               : todayWeather.location}
           </h1>

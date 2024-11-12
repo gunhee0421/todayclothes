@@ -75,7 +75,7 @@ export const TodayWeatherInfo: React.FC<{
             <p className="font-notosanko text-[0.8rem] text-weatherSubColor sm:text-weatherSub">
               {formatDate(language)}
             </p>
-            <span className="font-notosanko text-[1rem] font-semibold sm:text-weatherTem">
+            <span className="font-notosanko text-[1rem] font-[500] sm:text-weatherTem">
               {language !== 'ko' && todayWeather.timeOfDay
                 ? todayWeather.timeOfDay.en
                 : todayWeather.timeOfDay?.ko || ''}

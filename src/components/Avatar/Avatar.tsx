@@ -56,7 +56,7 @@ export const LoadingAvatar = () => {
   }, [])
 
   return (
-    <div className="flex flex-col items-center justify-end pt-[10vh]">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-white">
       {RandomImage && (
         <Image
           src={RandomImage}

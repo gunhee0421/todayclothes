@@ -94,6 +94,21 @@ const HomePage = () => {
       setWeatherSegments(getTimeData(todayWeather))
     }
   }, [todayWeather])
+  // 위치 정보 허용 여부
+  useEffect(() => {
+    navigator.permissions
+      .query({ name: 'geolocation' as PermissionName })
+      .then((permissionStatus) => {
+        setNavigatorError(permissionStatus.state === 'denied')
+        // 권한 상태가 변경될 때마다 업데이트
+        permissionStatus.onchange = () => {
+          setNavigatorError(permissionStatus.state === 'denied')
+        }
+      })
+      .catch(() => {
+        setNavigatorError(true)
+      })
+  }, [])
 
   if (!loading && navigatorError && background) {
     return (
@@ -117,7 +132,7 @@ const HomePage = () => {
             data={weatherSegments}
             setCurrentTemp={setCurrentTemp}
           />
-          <NavigationBar color={background} openModal={openModal} />
+          <NavigationBar color={background} navigation={navigatorError} />
           {isVisible && (
             <PlansModal isVisible={isVisible} closeModal={closeModal} />
           )}
@@ -145,7 +160,7 @@ const HomePage = () => {
               data={weatherSegments}
               setCurrentTemp={setCurrentTemp}
             />
-            <NavigationBar color={background} openModal={openModal} />
+            <NavigationBar color={background} navigation={navigatorError} />
             {isVisible && (
               <PlansModal isVisible={isVisible} closeModal={closeModal} />
             )}

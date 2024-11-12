@@ -16,13 +16,15 @@ import { useModal } from '@/hooks/useModal/useModal'
 import { useTranslate } from '@/hooks/useTranslate/useTranslate'
 import { useWeatherContext } from '@/providers/WeatherProvider'
 import { RootState } from '@/redux/store'
-import { useEffect, useState } from 'react'
+import { use, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useQueryClient } from '@tanstack/react-query'
 import Image from 'next/image'
 import { getRecommendData } from '@/components/Date/getRecommendData'
+import { useRouter } from 'next/navigation'
 
 const Recommend = () => {
+  const router = useRouter()
   const [loading, setLoading] = useState<boolean>(true)
   const language = useSelector((state: RootState) => state.language)
   const { translate, translatedText } = useTranslate()
@@ -87,6 +89,12 @@ const Recommend = () => {
       })
     }
   }, [weatherData, todayWeather, city])
+
+  useEffect(() => {
+    if (!weatherData) {
+      router.push('/home')
+    }
+  }, [])
 
   // comment 번역
   useEffect(() => {

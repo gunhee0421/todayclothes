@@ -34,8 +34,9 @@ const Recommend = () => {
   // POST
   const { data: activityInfo, mutate: mutateActivityInfo } = useActivityInfo({
     onSuccess: () => {
-      console.log('SUCCESS')
-      queryClient.invalidateQueries({ queryKey: ['activityHistory'] })
+      queryClient.invalidateQueries({
+        queryKey: ['activityHistory'],
+      })
     },
   })
   // 4일간의 특정 위치의 날씨 호출
@@ -49,7 +50,7 @@ const Recommend = () => {
   )
   // todayWeather 데이터로 시간에 따른 날씨 필터링
   useEffect(() => {
-    if (todayWeather && weatherData?.location && city) {
+    if (todayWeather && weatherData && city) {
       const filteredWeather = getRecommendData(
         todayWeather,
         weatherData.startTime || '',
@@ -85,7 +86,7 @@ const Recommend = () => {
         temp: filteredWeather.temp,
       })
     }
-  }, [weatherData?.location, todayWeather])
+  }, [weatherData, todayWeather, city])
 
   // comment 번역
   useEffect(() => {
@@ -120,7 +121,7 @@ const Recommend = () => {
       }
     }
     Location()
-  }, [weatherData?.location])
+  }, [weatherData])
 
   return (
     <>

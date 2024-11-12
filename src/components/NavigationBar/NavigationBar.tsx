@@ -6,10 +6,9 @@ type Color = 'zinc' | 'so_hot' | 'hot' | 'fresh' | 'cloud' | 'cold' | 'so_cold'
 
 interface NavigationBarProps {
   color: Color
-  openModal: () => void // Ensure this prop is defined
 }
 
-const NavigationBar: React.FC<NavigationBarProps> = ({ color, openModal }) => {
+const NavigationBar: React.FC<NavigationBarProps> = ({ color }) => {
   const router = useRouter()
 
   const handleSearchClick = () => {
@@ -24,9 +23,7 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ color, openModal }) => {
     router.push('/history')
   }
 
-  const handleRotateClick = () => {
-    openModal()
-  }
+  const handleRotateClick = () => {}
 
   return (
     <div

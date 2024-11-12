@@ -6,14 +6,12 @@ import {
   coordinate,
   useActivityInfo,
   useTodayWeatherQuery,
-  WeatherResponse,
 } from '@/api'
 import { ActivityWeatherInfo, TimeOfDay } from '@/api/services/recommend/model'
 import { LoadingAvatar } from '@/components/Avatar/Avatar'
 import Header from '@/components/Header/Header'
 import { ActivityWeather } from '@/components/Info/ActivityWeather'
 import NavigationBar from '@/components/NavigationBar/NavigationBar'
-import PlansModal from '@/components/Modal/PlansModal'
 import { useModal } from '@/hooks/useModal/useModal'
 import { useTranslate } from '@/hooks/useTranslate/useTranslate'
 import { useWeatherContext } from '@/providers/WeatherProvider'
@@ -25,7 +23,6 @@ import Image from 'next/image'
 import { getRecommendData } from '@/components/Date/getRecommendData'
 
 const Recommend = () => {
-  const { isVisible, openModal, closeModal } = useModal()
   const [loading, setLoading] = useState<boolean>(true)
   const language = useSelector((state: RootState) => state.language)
   const { translate, translatedText } = useTranslate()
@@ -129,9 +126,8 @@ const Recommend = () => {
     <>
       {!loading && todayWeather && query ? (
         <div className="flex min-h-screen flex-col gap-9 bg-white p-9">
-          <div>
-            <Header />
-          </div>
+          <Header />
+
           <div className="flex flex-1 flex-col justify-between gap-6">
             <ActivityWeather
               todayWeather={query}
@@ -145,15 +141,12 @@ const Recommend = () => {
               height={500}
               className="h-full w-full"
             />
-            <p className="font-notosanko text-[20px] font-semibold text-gray-500">
+            <p className="font-notosanko text-[15px] font-semibold text-gray-500 sm:text-[20px]">
               {language === 'en' && translatedText
                 ? translatedText[0]?.translations[0]?.text
                 : activityInfo?.result?.comment}
             </p>
-            <NavigationBar color="zinc" openModal={openModal} />
-            {isVisible && (
-              <PlansModal isVisible={isVisible} closeModal={closeModal} />
-            )}
+            <NavigationBar color="zinc" />
           </div>
         </div>
       ) : (

@@ -23,6 +23,11 @@ const nextConfig = {
         hostname: 'todayclothes-file.s3.ap-northeast-2.amazonaws.com',
         pathname: '/reviews/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'todayclothes-file.s3.ap-northeast-2.amazonaws.com',
+        pathname: '/clothes/**',
+      },
     ],
   },
 

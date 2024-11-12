@@ -57,7 +57,7 @@ export default function Feed() {
               </div>
             )}
             {/* 다음 페이지 로드를 위한 관찰 대상 요소 */}
-            <div ref={observerRef} className="h-10" />
+            <div ref={observerRef} />
             {isFetchingNextPage && <LoadingAvatar />}
           </div>
         </div>

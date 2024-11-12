@@ -16,9 +16,9 @@ const Review = () => {
   const queryClient = useQueryClient()
   const router = useRouter()
   const searchParams = useSearchParams()
-  const clothesId = searchParams.get('clothesId')
+  const clothesId = Number(searchParams.get('clothesId'))
 
-  const { handleSubmit, setValue, watch, reset } = useForm<{
+  const { handleSubmit, setValue, watch } = useForm<{
     selectedFeel: Feedback | null
     selectedFile: File | null
     photoCount: number
@@ -155,11 +155,16 @@ const Review = () => {
     }
   }, [camera, isCameraOn])
 
-  const onSubmit = async (data: {
-    selectedFeel: Feedback | null
-    selectedFile: File | null
-    photoCount: number
-  }) => {
+  async function blobUrlToFile(
+    blobUrl: string,
+    fileName: string,
+  ): Promise<File> {
+    const response = await fetch(blobUrl) // Blob URL을 실제 Blob으로 변환
+    const blob = await response.blob()
+    return new File([blob], fileName, { type: blob.type })
+  }
+
+  const onSubmit = async (data: { selectedFeel: Feedback | null }) => {
     const { selectedFeel } = data
 
     const formData = new FormData()
@@ -168,15 +173,17 @@ const Review = () => {
       clothesId: clothesId,
       feedback: selectedFeel || Feedback.Perfect,
     }
+
     formData.append(
       'reviewReq',
       new Blob([JSON.stringify(reviewReq)], { type: 'application/json' }),
     )
 
-    // `photos` 배열에서 최대 4개의 파일 추가
-    photos.slice(0, 4).forEach((file) => {
-      formData.append('imageFile', file)
-    })
+    // Blob URL을 File 객체로 변환하여 추가
+    for (const photoUrl of photos.slice(0, 4)) {
+      const file = await blobUrlToFile(photoUrl, 'photo.png')
+      formData.append('imageFiles', file)
+    }
 
     try {
       await activityReview.mutateAsync(formData, {
@@ -343,7 +350,6 @@ const Review = () => {
                 className="flex-1 rounded-[8px] bg-zinc-100 px-4 py-2"
                 onClick={() => {
                   router.push('/history')
-                  reset
                 }}
               >
                 {language === 'ko' ? '취소' : 'Cancel'}

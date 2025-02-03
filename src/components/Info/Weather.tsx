@@ -62,6 +62,8 @@ export const TodayWeatherInfo: React.FC<{
     }
   }, [city])
 
+  console.log(city)
+
   return (
     <div className="flex h-[97px] w-full max-w-lg content-center items-start self-stretch">
       {

@@ -14,6 +14,7 @@ import { useRouter } from 'next/navigation'
 import { useWeatherContext } from '@/providers/WeatherProvider'
 import { ActivityStyle, ActivityType } from '@/api'
 import { translateActivityStyle } from '../Info/translation'
+import { Gender, TimeOfDay } from '@/api/services/recommend/model'
 
 type Language = 'en' | 'ko'
 
@@ -59,12 +60,12 @@ const PlansModal: React.FC<PlansModalProps> = ({ isVisible, closeModal }) => {
     })
 
   const activityStyles = [
-    ActivityStyle.BusinessCasual,
-    ActivityStyle.Minimal,
+    ActivityStyle.Business,
+    ActivityStyle.Formal,
     ActivityStyle.Casual,
     ActivityStyle.Street,
-    ActivityStyle.Sports,
-    ActivityStyle.Amekaji,
+    ActivityStyle.Sporty,
+    ActivityStyle.Outdoor,
   ]
 
   const watchedValues = watch([
@@ -129,6 +130,8 @@ const PlansModal: React.FC<PlansModalProps> = ({ isVisible, closeModal }) => {
       endTime: data.endTime?.format('YYYY-MM-DDTHH:mm') || '',
       type: data.activityType,
       style: data.activityStyle,
+      timezone: TimeOfDay.Morning,
+      gender: Gender.Female,
     })
     router.push('/recommend')
     reset()

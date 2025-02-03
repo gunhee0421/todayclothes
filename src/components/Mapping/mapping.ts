@@ -13,18 +13,18 @@ export const typeMapping = (type: ActivityType) => {
 
 export const styleMapping = (style: ActivityStyle) => {
   switch (style) {
-    case ActivityStyle.BusinessCasual:
-      return 'BUSINESS_CASUAL'
-    case ActivityStyle.Minimal:
-      return 'MINIMAL'
+    case ActivityStyle.Business:
+      return 'BUSINESS'
+    case ActivityStyle.Formal:
+      return 'FORMAL'
     case ActivityStyle.Street:
       return 'STREET'
     case ActivityStyle.Casual:
       return 'CASUAL'
-    case ActivityStyle.Sports:
-      return 'SPORTS'
-    case ActivityStyle.Amekaji:
-      return 'AMEKAJI'
+    case ActivityStyle.Sporty:
+      return 'SPORTY'
+    case ActivityStyle.Outdoor:
+      return 'OUTDOOR'
     default:
       return 'CASUAL' // 기본값 설정
   }

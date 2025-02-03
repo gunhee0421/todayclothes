@@ -30,7 +30,7 @@ const history = [
       feedback: 'Too Hot',
     },
     type: ActivityType.Indoor,
-    style: ActivityStyle.Minimal,
+    style: ActivityStyle.Casual,
     weather: 800,
     wind: 8,
     rain: 0.5,
@@ -46,7 +46,7 @@ const history = [
       feedback: 'Too Cold',
     },
     type: ActivityType.Outdoor,
-    style: ActivityStyle.Sports,
+    style: ActivityStyle.Casual,
     weather: 200,
     wind: 28,
     rain: 0.9,
@@ -62,25 +62,6 @@ export const recommendHandlers = [
       code: 200,
       message: 'SUCCESS',
       result: history,
-    })
-  }),
-  http.post(`${process.env.NEXT_PUBLIC_API_URL}/clothes`, () => {
-    return HttpResponse.json<ActivityWeatherResponse>({
-      code: 200,
-      message: 'SUCCESS',
-      result: {
-        location: 'Seoul',
-        imgPath: 'https://pbs.twimg.com/media/Fdtt4qRaEAAZt_U.jpg',
-        comment: '이불밖은위험해',
-        type: ActivityType.Outdoor,
-        style: ActivityStyle.Casual,
-        weather: 800,
-        wind: 30,
-        rain: 0,
-        humidity: 50,
-        feelsLike: 22,
-        temp: 24,
-      },
     })
   }),
   http.post<{ clothesId: string; feedback: string }>(

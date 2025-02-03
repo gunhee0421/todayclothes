@@ -12,6 +12,7 @@ type WeatherData = {
     lon: number
   } | null
   startTime?: string
+  endTime?: string
   type: ActivityType | null
   style: ActivityStyle | null
   timezone: TimeOfDay

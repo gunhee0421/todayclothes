@@ -44,11 +44,12 @@ const Login = () => {
 
         <div className="flex w-full flex-col gap-[1.5rem] px-[1.5rem] py-[3rem]">
           <Link
-            href={`${process.env.NEXT_PUBLIC_SOCIAL_LOGIN_GOOGLE}?redirect_uri=${
-              process.env.VERCEL
-                ? 'https://todayclothes.vercel.app'
-                : 'http://localhost:3000/auth/token'
-            }`}
+            // href={`${process.env.NEXT_PUBLIC_SOCIAL_LOGIN_GOOGLE}?redirect_uri=${
+            //   process.env.VERCEL
+            //     ? 'https://todayclothes.vercel.app'
+            //     : 'http://localhost:3000/auth/token'
+            // }`}
+            href={'/home'}
           >
             <button className="flex w-full items-center justify-between rounded-[0.25rem] bg-white px-[1rem] py-[0.625rem] hover:bg-slate-50">
               <img src="/icon/google.svg" alt="google" width="24" height="24" />
@@ -59,11 +60,12 @@ const Login = () => {
           </Link>
 
           <Link
-            href={`${process.env.NEXT_PUBLIC_SOCIAL_LOGIN_KAKAO}?redirect_uri=${
-              process.env.VERCEL
-                ? 'https://todayclothes.vercel.app'
-                : 'http://localhost:3000/auth/token'
-            }`}
+            // href={`${process.env.NEXT_PUBLIC_SOCIAL_LOGIN_KAKAO}?redirect_uri=${
+            //   process.env.VERCEL
+            //     ? 'https://todayclothes.vercel.app'
+            //     : 'http://localhost:3000/auth/token'
+            // }`}
+            href={'/home'}
           >
             <button className="flex w-full items-center rounded-[0.25rem] bg-yellow-300 px-[1rem] py-[0.625rem] hover:bg-yellow-200">
               <img src="/icon/kakao.svg" alt="kakao" width="24" height="24" />
